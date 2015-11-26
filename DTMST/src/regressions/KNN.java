@@ -78,7 +78,7 @@ public class KNN  extends IBk{
             KNN classifier = new KNN();
             classifier.setOptions(new String[]{"-F","-K",Integer.toString(i)});
             Resample filter=new Resample();
-            filter.setOptions(new String[]{"-Z","10","-no-replacement","-S","1"});
+            filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
             filter.setInputFormat(cp.getData());
             Instances newTrain = Filter.useFilter(cp.getData(), filter); 
             filter.setOptions(new String[]{"-Z","10","-no-replacement","-S","2"});

@@ -33,4 +33,10 @@ public class DEdge implements Comparable<DEdge> {
 	public String toString(){
 		return "["+p[0]+","+p[1]+"]\n";
 	}
+	
+	public boolean contains(DPoint pt){
+		if(p[0]==pt||p[1]==pt){
+			return true;
+		}else{return false;}
+	}
 }
