@@ -36,7 +36,7 @@ public class Algorithms {
 			break;
 			
 		case MINIMUM_SPANNING_TREE_MERGING :
-			ret = new MAPofBMA(26,-124,24,70);
+			ret = new MAPofBMA(-200,-200,300,300);
 			break;
 		}
 
@@ -63,6 +63,8 @@ public class Algorithms {
 			break;
 
 		case MINIMUM_SPANNING_TREE_MERGING :
+			param.put("-I",Sets.newHashSet("-I 30","-I 60","-K 100","-K 130","-K 160","-K 200","-K 230","-K 260","-K 300","-K 330","-K 360","-K 400","-K 430","-K 460","-K 500"));
+			param.put("-F",Sets.newHashSet("-F"));
 			param = null;
 			break;
 		}

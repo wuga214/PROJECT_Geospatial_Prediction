@@ -100,7 +100,8 @@ public class MAPofBMA extends Classifier{
 		try {
 			for(int i=1;i<=1000;i++){
 			RegressionProblem cp = new RegressionProblem("data/tobs-averages.arff");
-			MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
+			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
+			MAPofBMA classifier=new MAPofBMA(-200,-200,300,300);
 			classifier.setOptions(new String[]{"-I",Integer.toString(i)});
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
