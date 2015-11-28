@@ -1,0 +1,53 @@
+Note: the latex result table is under construction
+
+
+=== Setup run ===
+Classifier: regressions.FRT -M 2 -V 0.001 -N 3 -S 1 -L -1
+Dataset: tobs-averages
+
+=== test dataset result ===
+Correlation coefficient                  0.8409
+Mean absolute error                     30.2389
+Root mean squared error                 41.4108
+Relative absolute error                 54.0495 %
+Root relative squared error             54.3099 %
+Total Number of Instances             1528     
+
+
+=== Setup run ===
+Classifier: regressions.GP -L 0.1 -N 1 -K "weka.classifiers.functions.supportVector.RBFKernel -C -1 -G 0.01"
+Dataset: tobs-averages
+
+=== test dataset result ===
+Correlation coefficient                  0.7255
+Mean absolute error                     39.4712
+Root mean squared error                 52.431 
+Relative absolute error                 70.5514 %
+Root relative squared error             68.7629 %
+Total Number of Instances             1528     
+
+
+=== Setup run ===
+Classifier: regressions.KNN -K 5 -W 0 -F -A "weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\""
+Dataset: tobs-averages
+
+=== test dataset result ===
+Correlation coefficient                  0.8495
+Mean absolute error                     29.6983
+Root mean squared error                 40.5478
+Relative absolute error                 53.0832 %
+Root relative squared error             53.1781 %
+Total Number of Instances             1528     
+
+
+=== Setup run ===
+Classifier: regressions.MAPofBMA -I 500 -F
+Dataset: tobs-averages
+
+=== test dataset result ===
+Correlation coefficient                  0.8315
+Mean absolute error                     26.9853
+Root mean squared error                 44.2943
+Relative absolute error                 48.2339 %
+Root relative squared error             58.0916 %
+Total Number of Instances             1528   
