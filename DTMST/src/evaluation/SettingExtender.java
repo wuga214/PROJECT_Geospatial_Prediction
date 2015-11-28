@@ -35,8 +35,8 @@ public class SettingExtender {
 	}
 	public static void main(String[] args) {
 		HashMap<String,Set<String>> param = new HashMap<String,Set<String>>();
-		param.put("-M",Sets.newHashSet("-M 1","-M 2","-M 3","-M 4","-M 5"));
-		param.put("-V",Sets.newHashSet("-V 0.001","-V 0.01","-V 0.1","-V 1","-V 10"));
+		param.put("-I",Sets.newHashSet("-I 30","-I 60","-I 100","-I 130","-I 160","-I 200","-I 230","-I 260","-I 300","-I 330","-I 360","-I 400","-I 430","-I 460","-I 500"));
+		param.put("-F",Sets.newHashSet("-F"));
 		List<String> settings=generateModels(param);
 		for(String setting:settings){
 			System.out.println(setting);

@@ -54,6 +54,7 @@ public class Algorithms {
 
 		case GAUSSIAN_PROCESS :
 			param.put("-L",Sets.newHashSet("-L 0.01","-L 0.1","-L 1","-L 10","-L 100"));
+			param.put("-N", Sets.newHashSet("-N 1"));
 			param.put("-K",Sets.newHashSet("-K weka.classifiers.functions.supportVector.RBFKernel","-K weka.classifiers.functions.supportVector.PolyKernel"));
 			break;
 			
@@ -63,9 +64,8 @@ public class Algorithms {
 			break;
 
 		case MINIMUM_SPANNING_TREE_MERGING :
-			param.put("-I",Sets.newHashSet("-I 30","-I 60","-K 100","-K 130","-K 160","-K 200","-K 230","-K 260","-K 300","-K 330","-K 360","-K 400","-K 430","-K 460","-K 500"));
+			param.put("-I",Sets.newHashSet("-I 30","-I 60","-I 100","-I 130","-I 160","-I 200","-I 230","-I 260","-I 300","-I 330","-I 360","-I 400","-I 430","-I 460","-I 500"));
 			param.put("-F",Sets.newHashSet("-F"));
-			param = null;
 			break;
 		}
 

@@ -89,9 +89,10 @@ public class MAPofBMA extends Classifier{
     
     public String[] getOptions() {
 
-        String[] options = new String[2];
+        String[] options = new String[3];
         options[0] = "-I";
         options[1] = Integer.toString(iteration);
+        options[2] = "-F";
         return options;
     }
 
