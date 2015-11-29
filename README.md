@@ -1,5 +1,9 @@
 # Geospatial_Prediction
 
+TO RUN
+===
+src/evaluation/CrossValidations.java
+
 Progress
 ===
 1. Baseline algorithms are good to work now.<br />
