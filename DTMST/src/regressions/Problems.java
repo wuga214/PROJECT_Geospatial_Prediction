@@ -15,18 +15,18 @@ public class Problems {
 	}
 	public Problems(){}
 
-	public RegressionProblem createClassifier(EProblemList EType) throws IOException {
+	public RegressionProblem createRegressionProblem(EProblemList EType) throws IOException {
 		RegressionProblem ret = null;
 
 		switch (EType) {
 		case US_TAMPERATURE :
-			ret = new RegressionProblem("data/tobs-averages.arff");
+			ret = new RegressionProblem("data/Temperature.arff");
 			break;
 		case SAN_FRANCISICO_HOUSE_PRICE :
-			ret = new RegressionProblem("data/hs2012.arff");
+			ret = new RegressionProblem("data/HousePrice.arff");
 			break;
 		case SYNTHETIC_DATA :
-			ret = new RegressionProblem("data/syntheticdata.arff");
+			ret = new RegressionProblem("data/Synthetic.arff");
 			break;
 		}
 

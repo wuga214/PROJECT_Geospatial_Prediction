@@ -74,7 +74,7 @@ public class KNN  extends IBk{
 		try {
             
             for(int i=1;i<=10;i++){
-            RegressionProblem cp = new RegressionProblem("data/tobs-averages.arff");
+            RegressionProblem cp = new RegressionProblem("data/Temperature.arff");
             KNN classifier = new KNN();
             classifier.setOptions(new String[]{"-F","-K",Integer.toString(i)});
             Resample filter=new Resample();

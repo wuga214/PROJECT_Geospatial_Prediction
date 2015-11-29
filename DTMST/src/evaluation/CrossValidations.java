@@ -9,8 +9,10 @@ import java.util.Map;
 import java.util.Set;
 
 import regressions.Algorithms;
+import regressions.EProblemList;
 import regressions.ERegressionList;
 import regressions.MAPofBMA;
+import regressions.Problems;
 import utils.RegressionProblem;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -40,9 +42,7 @@ public class CrossValidations {
 	      return eval;
 	}
 	
-	public static void batchCrossValidation() throws Exception{
-		CVOutput cvout=new CVOutput();
-		RegressionProblem cp = new RegressionProblem("data/tobs-averages.arff");
+	public static List<FoldRecord> batchCrossValidation(RegressionProblem cp) throws Exception{
 		Instances data=cp.getData();
 		Resample filter=new Resample();
 		filter.setOptions(new String[]{"-Z","30","-no-replacement","-S","1"});
@@ -81,7 +81,17 @@ public class CrossValidations {
 			// Here I need to apply best settings to whole training data and add that result into CVoutput list,
 			// To be continue
 		}
-		cvout.add(probresults);
+		return probresults;
+	}
+	
+	public static CVOutput autobatchCrossValidation() throws Exception{
+		CVOutput cvout=new CVOutput();
+		Problems pbs=new Problems();
+		for(EProblemList name:EProblemList.values()){
+			RegressionProblem cp=pbs.createRegressionProblem(name);
+			cvout.add(batchCrossValidation(cp),name.toString());
+		}
+		return cvout;
 	}
 
 	public static void main(String[] args) {
@@ -96,7 +106,8 @@ public class CrossValidations {
 //			MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 //			classifier.setOptions(new String[]{"-I","1"});
 //			Evaluation ave=crossValidation(classifier,newTrain,10);
-			batchCrossValidation();
+			CVOutput cvout=autobatchCrossValidation();
+			System.out.println(cvout.getTable());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

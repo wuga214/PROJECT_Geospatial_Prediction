@@ -1,6 +1,115 @@
 Note: the latex result table is under construction
 
 
+Problem: Synthetic Data
+
+=== Setup run ===
+Classifier: regressions.FRT -M 1 -V 0.001 -N 3 -S 1 -L -1
+Dataset: syntheticdata
+
+=== test dataset result ===
+Correlation coefficient                  0.988 
+Mean absolute error                      3.0768
+Root mean squared error                  4.0013
+Relative absolute error                 18.0598 %
+Root relative squared error             15.5768 %
+Total Number of Instances              120     
+
+
+=== Setup run ===
+Classifier: regressions.GP -L 0.01 -N 1 -K "weka.classifiers.functions.supportVector.RBFKernel -C -1 -G 0.01"
+Dataset: syntheticdata
+
+=== test dataset result ===
+Correlation coefficient                  0.814 
+Mean absolute error                     10.2741
+Root mean squared error                 14.9252
+Relative absolute error                 60.3052 %
+Root relative squared error             58.1033 %
+Total Number of Instances              120     
+
+
+=== Setup run ===
+Classifier: regressions.KNN -K 2 -W 0 -F -A "weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\""
+Dataset: syntheticdata
+
+=== test dataset result ===
+Correlation coefficient                  0.9426
+Mean absolute error                      5.0917
+Root mean squared error                  8.5907
+Relative absolute error                 29.8861 %
+Root relative squared error             33.4435 %
+Total Number of Instances              120     
+
+
+=== Setup run ===
+Classifier: regressions.MAPofBMA -I 60 -F
+Dataset: syntheticdata
+
+=== test dataset result ===
+Correlation coefficient                  0.9562
+Mean absolute error                      3.8461
+Root mean squared error                  7.8269
+Relative absolute error                 22.5753 %
+Root relative squared error             30.4697 %
+Total Number of Instances              120     
+
+
+Problem: San Fransico House Price
+
+=== Setup run ===
+Classifier: regressions.FRT -M 3 -V 0.001 -N 3 -S 1 -L -1
+Dataset: hs2012
+
+=== test dataset result ===
+Correlation coefficient                  0.2662
+Mean absolute error                 580527.1148
+Root mean squared error            1896075.5114
+Relative absolute error                 93.5295 %
+Root relative squared error             96.4603 %
+Total Number of Instances              348     
+
+
+=== Setup run ===
+Classifier: regressions.GP -L 0.1 -N 1 -K "weka.classifiers.functions.supportVector.RBFKernel -C -1 -G 0.01"
+Dataset: hs2012
+
+=== test dataset result ===
+Correlation coefficient                  0.2095
+Mean absolute error                 597807.5062
+Root mean squared error            1922334.8159
+Relative absolute error                 96.3136 %
+Root relative squared error             97.7962 %
+Total Number of Instances              348     
+
+
+=== Setup run ===
+Classifier: regressions.KNN -K 2 -W 0 -F -A "weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\""
+Dataset: hs2012
+
+=== test dataset result ===
+Correlation coefficient                  0.8694
+Mean absolute error                 337937.3091
+Root mean squared error            1045398.6682
+Relative absolute error                 54.4455 %
+Root relative squared error             53.1832 %
+Total Number of Instances              348     
+
+
+=== Setup run ===
+Classifier: regressions.MAPofBMA -I 30 -F
+Dataset: hs2012
+
+=== test dataset result ===
+Correlation coefficient                  0.9644
+Mean absolute error                 244006.8871
+Root mean squared error             520796.4224
+Relative absolute error                 39.3123 %
+Root relative squared error             26.4948 %
+Total Number of Instances              348     
+
+Problem: US temperature 01/01/2015
+
 === Setup run ===
 Classifier: regressions.FRT -M 2 -V 0.001 -N 3 -S 1 -L -1
 Dataset: tobs-averages
@@ -41,13 +150,14 @@ Total Number of Instances             1528
 
 
 === Setup run ===
-Classifier: regressions.MAPofBMA -I 500 -F
+Classifier: regressions.MAPofBMA -I 460 -F
 Dataset: tobs-averages
 
 === test dataset result ===
-Correlation coefficient                  0.8315
-Mean absolute error                     26.9853
-Root mean squared error                 44.2943
-Relative absolute error                 48.2339 %
-Root relative squared error             58.0916 %
-Total Number of Instances             1528   
+Correlation coefficient                  0.8318
+Mean absolute error                     26.8528
+Root mean squared error                 44.2748
+Relative absolute error                 47.9972 %
+Root relative squared error             58.066  %
+Total Number of Instances             1528     
+  

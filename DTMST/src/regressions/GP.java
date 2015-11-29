@@ -88,7 +88,7 @@ public class GP extends GaussianProcesses {
 		// TODO Auto-generated method stub
 		try {
 			for(double i=0.01;i<=100;i=i*10){
-            RegressionProblem cp = new RegressionProblem("data/tobs-averages.arff");
+            RegressionProblem cp = new RegressionProblem("data/Temperature.arff");
             GP classifier = new GP();
             classifier.setOptions(new String[]{"-L",Double.toString(i),"-N","1","-K","weka.classifiers.functions.supportVector.RBFKernel"});
             Resample filter=new Resample();

@@ -64,7 +64,12 @@ public class Algorithms {
 			break;
 
 		case MINIMUM_SPANNING_TREE_MERGING :
-			param.put("-I",Sets.newHashSet("-I 30","-I 60","-I 100","-I 130","-I 160","-I 200","-I 230","-I 260","-I 300","-I 330","-I 360","-I 400","-I 430","-I 460","-I 500"));
+			Set<String> set=Sets.newHashSet();
+			for(int i=30; i<=1500;i=i+30){
+				set.add("-I "+i);
+			}
+			param.put("-I", set);
+			//param.put("-I",Sets.newHashSet("-I 30","-I 60","-I 100","-I 130","-I 160","-I 200","-I 230","-I 260","-I 300","-I 330","-I 360","-I 400","-I 430","-I 460","-I 500"));
 			param.put("-F",Sets.newHashSet("-F"));
 			break;
 		}

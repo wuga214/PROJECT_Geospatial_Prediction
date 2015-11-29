@@ -90,9 +90,9 @@ public class MAPofBMA extends Classifier{
     public String[] getOptions() {
 
         String[] options = new String[3];
-        options[0] = "-I";
+        options[0] = "-I";//number of merging required!!
         options[1] = Integer.toString(iteration);
-        options[2] = "-F";
+        options[2] = "-F";//not useful at all, just prevent parameter setting function failure
         return options;
     }
 
@@ -100,7 +100,7 @@ public class MAPofBMA extends Classifier{
 		// TODO Auto-generated method stub
 		try {
 			for(int i=1;i<=1000;i++){
-			RegressionProblem cp = new RegressionProblem("data/tobs-averages.arff");
+			RegressionProblem cp = new RegressionProblem("data/Temperature.arff");
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			MAPofBMA classifier=new MAPofBMA(-200,-200,300,300);
 			classifier.setOptions(new String[]{"-I",Integer.toString(i)});
