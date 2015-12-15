@@ -17,3 +17,10 @@ Table
 Comparasion
 ===
 ![alt tag](https://github.com/wuga214/Geospatial_Prediction/blob/master/Comparasion.png)
+
+Synthetic data
+===
+3D Data Plot
+------------ | -------------
+![box](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/figure_1.png) | ![circles](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/figure_2.png)
+![stair](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/figure_3.png) | ![cake](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/figure_4.png)
