@@ -24,3 +24,10 @@ Synthetic data
 ------------ | -------------
 ![box](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/figure_1.png) | ![circles](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/figure_2.png)
 ![stair](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/figure_3.png) | ![cake](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/figure_4.png)
+
+3D Results Plots
+===
+![box](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_box.png)
+![circles](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_circles.png)
+![stair](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_stair.png)
+![cake](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_cake.png)
