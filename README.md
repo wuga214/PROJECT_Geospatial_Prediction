@@ -27,11 +27,11 @@ Synthetic data
 
 3D Results Plots
 ===
-Box:<br />
+Box:
 ![box](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_box.png)
-Circles:<br />
+Circles:
 ![circles](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_circles.png)
-Stair:<br />
+Stair:
 ![stair](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_stair.png)
-Cake:<br />
+Cake:
 ![cake](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_cake.png)
