@@ -72,9 +72,9 @@ public class FRT extends REPTree {
 		// TODO Auto-generated method stub
 		try {
 			for(int i=1;i<=10;i++){
-            RegressionProblem cp = new RegressionProblem("data/Temperature.arff");
+            RegressionProblem cp = new RegressionProblem("data/HousePrice.arff");
             FRT classifier = new FRT();
-            classifier.setOptions(new String[]{"-M",Integer.toString(i),"-V","0.001","-P"});
+            classifier.setOptions(new String[]{"-M",Integer.toString(i),"-V","0.001"});
             Resample filter=new Resample();
             filter.setOptions(new String[]{"-Z","10","-no-replacement"});
             filter.setInputFormat(cp.getData());

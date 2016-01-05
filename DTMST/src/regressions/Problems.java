@@ -19,14 +19,23 @@ public class Problems {
 		RegressionProblem ret = null;
 
 		switch (EType) {
-		case US_TAMPERATURE :
+		case USTemperature :
 			ret = new RegressionProblem("data/Temperature.arff");
 			break;
-		case SAN_FRANCISICO_HOUSE_PRICE :
+		case SanFranciscoHousePrice :
 			ret = new RegressionProblem("data/HousePrice.arff");
 			break;
-		case SYNTHETIC_DATA :
-			ret = new RegressionProblem("data/Synthetic.arff");
+		case SyntheticBox :
+			ret = new RegressionProblem("data/box.arff");
+			break;
+		case SyntheticCircles :
+			ret = new RegressionProblem("data/Circles.arff");
+			break;
+		case SyntheticStair :
+			ret = new RegressionProblem("data/Stair.arff");
+			break;
+		case SyntheticCake :
+			ret = new RegressionProblem("data/Cake.arff");
 			break;
 		}
 

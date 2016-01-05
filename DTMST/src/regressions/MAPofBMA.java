@@ -26,8 +26,8 @@ public class MAPofBMA extends Classifier{
 	 * 
 	 */
 	private static final long serialVersionUID = 573536156928733812L;
-	double height=70;
-	double width=24;
+	double height=100;
+	double width=100;
 	double startx=0;
 	double starty=0;
 	int iteration=0;

@@ -38,6 +38,9 @@ public class Algorithms {
 		case MINIMUM_SPANNING_TREE_MERGING :
 			ret = new MAPofBMA(-200,-200,300,300);
 			break;
+		case MST_HYPERPLATE_FITTING:
+			ret = new MTSMLinearHyperPlate(-200,-200,300,300);
+			break;
 		}
 
 		return ret;
@@ -65,10 +68,20 @@ public class Algorithms {
 
 		case MINIMUM_SPANNING_TREE_MERGING :
 			Set<String> set=Sets.newHashSet();
-			for(int i=30; i<=1500;i=i+30){
+			for(int i=1; i<=1500;i=i+10){
 				set.add("-I "+i);
 			}
 			param.put("-I", set);
+			//param.put("-I",Sets.newHashSet("-I 30","-I 60","-I 100","-I 130","-I 160","-I 200","-I 230","-I 260","-I 300","-I 330","-I 360","-I 400","-I 430","-I 460","-I 500"));
+			param.put("-F",Sets.newHashSet("-F"));
+			break;
+			
+		case MST_HYPERPLATE_FITTING :
+			Set<String> set2=Sets.newHashSet();
+			for(int i=1; i<=1500;i=i+10){
+				set2.add("-I "+i);
+			}
+			param.put("-I", set2);
 			//param.put("-I",Sets.newHashSet("-I 30","-I 60","-I 100","-I 130","-I 160","-I 200","-I 230","-I 260","-I 300","-I 330","-I 360","-I 400","-I 430","-I 460","-I 500"));
 			param.put("-F",Sets.newHashSet("-F"));
 			break;

@@ -11,8 +11,8 @@ public class CSVtoArff {
    * - CSV input file
    * - ARFF output file
    */
-	public static String csv="data/syntheticdata.csv";
-	public static String arff="data/syntheticdata.arff";
+	public static String csv="data/Circles.csv";
+	public static String arff="data/Circles.arff";
   
 	public static void main(String[] args) throws Exception {
  
@@ -25,7 +25,7 @@ public class CSVtoArff {
 	    ArffSaver saver = new ArffSaver();
 	    saver.setInstances(data);
 	    saver.setFile(new File(arff));
-	    saver.setDestination(new File(arff));
+	    //saver.setDestination(new File(arff));
 	    saver.writeBatch();
 	}
 }
