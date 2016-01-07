@@ -47,7 +47,7 @@ public class CrossValidations {
 	public static List<FoldRecord> batchCrossValidation(RegressionProblem cp) throws Exception{
 		Instances data=cp.getData();
 		Resample filter=new Resample();
-		filter.setOptions(new String[]{"-Z","10","-no-replacement","-S","1"});
+		filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
 		filter.setInputFormat(data);
 		Instances newTrain = Filter.useFilter(data, filter);
 		filter.setOptions(new String[]{"-Z","30","-no-replacement","-S","3"});
@@ -95,7 +95,7 @@ public class CrossValidations {
 			Instances data=cp.getData();
 			data.randomize(rand);
 			Resample filter=new Resample();
-			filter.setOptions(new String[]{"-Z","10","-no-replacement","-S","1"});
+			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
 			filter.setInputFormat(data);
 			Instances newTrain = Filter.useFilter(data, filter);
 			filter.setOptions(new String[]{"-Z","30","-no-replacement","-S","3"});

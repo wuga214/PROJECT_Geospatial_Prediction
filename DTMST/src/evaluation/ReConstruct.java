@@ -28,7 +28,7 @@ public class ReConstruct {
 			Random rand=new Random();
 			unlabeled.randomize(rand);
 			Resample filter=new Resample();
-			filter.setOptions(new String[]{"-Z","10","-no-replacement"});
+			filter.setOptions(new String[]{"-Z","20","-no-replacement"});
 			filter.setInputFormat(unlabeled);
 			Instances newTrain = Filter.useFilter(unlabeled, filter);
 			Instances labeled = new Instances(unlabeled);
