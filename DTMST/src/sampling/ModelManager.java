@@ -39,6 +39,27 @@ public class ModelManager {
 		}
 	}
 	
+	public void removeEmptySegments(){
+		for(int i=segmentations.size()-1;i>=0;i--){
+			if(segmentations.get(i).cells.isEmpty()){
+				segmentations.remove(i);
+			}
+		}
+		if(segmentations.size()<modeledData.numInstances()){
+			segmentations.add(new Segmentation());
+		}
+	}
+	
+	public int findSegmentIndex(int cellID){
+		int segIndex=-1;
+		for(int i=0;i<segmentations.size();i++){
+			if(segmentations.get(i).contains(cellID)){
+				segIndex=i;
+			}
+		}
+		return segIndex;
+	}
+	
 	public void buildClassifier() throws Exception{
 		KNN classifier = new KNN();
 		classifier.setOptions(new String[]{"-K","1"});
@@ -52,6 +73,14 @@ public class ModelManager {
          return eval.correlationCoefficient();
 	}
 	
+	public List<Segmentation> deepCopySegmentations(){
+		List<Segmentation> newList=new ArrayList<Segmentation>();
+		for(Segmentation p : segmentations) {
+		    newList.add(p.clone());
+		}
+		return newList;
+	}
+	
 	/*
 	 * Using KNN is not good idea here, this is just an temperal method for making Gibbs sampling work.
 	 * I expect to use maximum likelihood estimation of mu and sigma instead of only mu here, so that we can use maximum
@@ -59,7 +88,6 @@ public class ModelManager {
 	 * 
 	 * But computing variance when segmentation assignment flipping is expensive, looking for incremental method for this.
 	 */
-	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

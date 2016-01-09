@@ -19,6 +19,11 @@ public class Segmentation {
 		value=data.instance(i).classValue();
 	}
 	
+	public Segmentation(){
+		cells=new HashSet<Integer>();
+		value=0;
+	}
+	
 	private void computeValue(Instances data){
 		for(int index:cells){
 			value+=data.instance(index).classValue();
@@ -38,6 +43,15 @@ public class Segmentation {
 			value=(value*cells.size()-data.instance(i).classValue())/(cells.size()-1);
 			cells.remove(i);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Segmentation clone(){
+		Segmentation newseg=new Segmentation();
+		newseg.cells=(HashSet<Integer>) this.cells.clone();
+		newseg.value=this.value;
+		return newseg;
+
 	}
 	
 	public boolean isEmpty(){

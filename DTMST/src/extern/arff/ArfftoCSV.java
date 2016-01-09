@@ -17,8 +17,8 @@ public class ArfftoCSV {
    * - ARFF input file
    * - CSV output file
    */
-	public static String csv="data/Circles.csv";
-	public static String arff="data/Circles.arff";
+	public static String csv="data/HousePrice.csv";
+	public static String arff="data/HousePrice.arff";
 	
 	public static void BatchConvert(CVOutput cv) throws IOException{
 		for(int i=0; i<cv.problems.size();i++){
