@@ -1,6 +1,12 @@
 package sampling;
 
+import java.io.IOException;
+
+import regressions.KNN;
+import utils.RegressionProblem;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.instance.Resample;
 
 public class Gibbs {
 	public ModelManager Manager;
@@ -21,14 +27,17 @@ public class Gibbs {
 	
 	//Gibbs Sampling outer iterations: number of iterations and dimension selection without random selection(tuning around)
 	public void Sampling() throws Exception{
+		System.out.println("Number of training data:"+oregData.numInstances());
 		for(int i=0;i<iteration;i++){
+			System.out.println("iteration:"+(i+1));
+			System.out.println("Number of Segmentations:"+Manager.segmentations.size());
 			for(int j=0;j<oregData.numInstances();j++){
 				int sdsIndex=singleDimensionSampling(j);
 				Manager.flipCellAssignment(j, sdsIndex, oregData);
 				Manager.removeEmptySegments();
 				//only sample 10 models!
 				if((iteration-i)<=10&&j==oregData.numInstances()){
-					samples.addSample(Manager.deepCopySegmentations());
+					samples.addSample(Manager.deepCopySegmentations(),currentSampleWeight);
 				}
 			}
 		}
@@ -67,7 +76,24 @@ public class Gibbs {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+        RegressionProblem cp;
+        SampleManager samp=new SampleManager();
+		try {
+			
+		cp = new RegressionProblem("data/box.arff");
+        Resample filter=new Resample();
+        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
+        filter.setInputFormat(cp.getData());
+        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
+        filter.setOptions(new String[]{"-Z","10","-no-replacement","-S","2"});
+        Instances newTest = Filter.useFilter(cp.getData(), filter); 
+        Gibbs gb=new Gibbs(newTrain, newTest, 100, samp);
+        gb.Sampling();
+        gb.Manager.writeFile("Gibbs");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

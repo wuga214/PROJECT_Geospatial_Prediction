@@ -1,5 +1,8 @@
 package sampling;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +15,20 @@ public class ModelManager {
 	public Instances modeledData;
 	public KNN model;
 	
+	//consider to initial manger with single segmentation, so gibbs can partition it into proper segmentations
+	//Change this tonight
 	public ModelManager(Instances data){
 		modeledData=new Instances(data);
 		segmentations=new ArrayList<Segmentation>();
+		Segmentation segment=new Segmentation();
 		for(int i=0;i<modeledData.numInstances();i++){
-			segmentations.add(new Segmentation(i,modeledData));
+			segment.addCell(i, modeledData);
 		}
+		segmentations.add(segment);
+		segmentations.add(new Segmentation());
+//		for(int i=0;i<modeledData.numInstances();i++){
+//			segmentations.add(new Segmentation(i,modeledData));
+//		}
 	}
 	
 	public void flipCellAssignment(int cellID, int segID, Instances data){
@@ -81,6 +92,14 @@ public class ModelManager {
 		return newList;
 	}
 	
+	public void writeFile(String name) throws Exception{
+		BufferedWriter writer = new BufferedWriter(
+				new FileWriter("outputs/"+name+".arff"));
+		writer.write(modeledData.toString());
+		writer.newLine();
+		writer.flush();
+		writer.close();
+	}
 	/*
 	 * Using KNN is not good idea here, this is just an temperal method for making Gibbs sampling work.
 	 * I expect to use maximum likelihood estimation of mu and sigma instead of only mu here, so that we can use maximum
