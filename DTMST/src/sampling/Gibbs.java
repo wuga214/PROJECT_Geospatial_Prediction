@@ -1,5 +1,7 @@
 package sampling;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import regressions.KNN;
@@ -26,19 +28,39 @@ public class Gibbs {
 	}
 	
 	//Gibbs Sampling outer iterations: number of iterations and dimension selection without random selection(tuning around)
-	public void Sampling() throws Exception{
+	public void Sampling(Instances wholedata) throws Exception{
 		System.out.println("Number of training data:"+oregData.numInstances());
+		//Gibbs Sampling outer layer: iteration of full dimensions route
 		for(int i=0;i<iteration;i++){
 			System.out.println("iteration:"+(i+1));
 			System.out.println("Number of Segmentations:"+Manager.segmentations.size());
+			//Gibbs Samping inner layer: sampling for each dimension
 			for(int j=0;j<oregData.numInstances();j++){
+				//taking sample value of the dimension through singleDimensionSampling() function
 				int sdsIndex=singleDimensionSampling(j);
 				Manager.flipCellAssignment(j, sdsIndex, oregData);
 				Manager.removeEmptySegments();
 				//only sample 10 models!
+				
 				if((iteration-i)<=10&&j==oregData.numInstances()){
 					samples.addSample(Manager.deepCopySegmentations(),currentSampleWeight);
 				}
+			}
+			if(i%10.0==0.0){
+				Manager.buildClassifier();
+				Instances labeled = new Instances(wholedata);
+				for (int k = 0; k < wholedata.numInstances(); k++) {
+					//bug founded here! the training instance value is changed to segmentation index!!!!
+					double clsLabel = Manager.classifyInstance(wholedata.instance(k));
+					labeled.instance(k).setClassValue(clsLabel);
+				}
+				// save labeled data
+				BufferedWriter writer = new BufferedWriter(
+						new FileWriter("outputs/Gibbs/iteration_"+i+".arff"));
+				writer.write(labeled.toString());
+				writer.newLine();
+				writer.flush();
+				writer.close();
 			}
 		}
 	}
@@ -46,26 +68,41 @@ public class Gibbs {
 	//Single Dimension Conditional Distribution, Sample value of single dimension given values from other dimensions fixed.
 	public int singleDimensionSampling(int dimIndex) throws Exception{
 		int segSize=Manager.segmentations.size();
-		double[] densities=new double[segSize];
-		double sum=0;
+		double[] logLikelihood=new double[segSize];
+		double largest=-Double.MAX_VALUE;
+		double partition=0;
 		for(int i=0;i<segSize;i++){
 			Manager.flipCellAssignment(dimIndex, i, oregData);
-			Manager.buildClassifier();
-			densities[i]=Manager.modelEval(validating);
-			sum+=densities[i];
+			logLikelihood[i]=Manager.getLogLikelihood(validating);
+			if(logLikelihood[i]>largest){
+				largest=logLikelihood[i];
+			}
+		}
+		double exps=0;
+		for(int i=0;i<logLikelihood.length;i++){
+			exps+=Math.exp(logLikelihood[i]-largest);
+		}
+		partition=largest+Math.log(exps);
+		//log likelihood now tune into likelihood, even still using name loglikelihood
+		double sum=0;
+		for(int i=0;i<logLikelihood.length;i++){
+			logLikelihood[i]=Math.exp(logLikelihood[i]-partition);
+			sum+=logLikelihood[i];
 		}
 		
+		//Uniformly distributed random value
+		//cumulative density larger than this value, then the last candidate added is selected as sample 
 		double rand=Math.random();
 		double cumuDensity=0;
 		int sampleIndex=-1;
 		for(int i=0;i<segSize;i++){
-			cumuDensity+=densities[i];
+			cumuDensity+=logLikelihood[i];
 			if(rand<=(cumuDensity/sum)){
 				sampleIndex=i;
 				break;
 			}
 		}
-		currentSampleWeight=densities[sampleIndex];
+		currentSampleWeight=logLikelihood[sampleIndex];
 		return sampleIndex;
 		/*
 		 * 1 find sampled segmentation index;
@@ -76,20 +113,19 @@ public class Gibbs {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-        RegressionProblem cp;
-        SampleManager samp=new SampleManager();
 		try {
-			
-		cp = new RegressionProblem("data/box.arff");
-        Resample filter=new Resample();
-        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
-        filter.setInputFormat(cp.getData());
-        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
-        filter.setOptions(new String[]{"-Z","10","-no-replacement","-S","2"});
-        Instances newTest = Filter.useFilter(cp.getData(), filter); 
-        Gibbs gb=new Gibbs(newTrain, newTest, 100, samp);
-        gb.Sampling();
-        gb.Manager.writeFile("Gibbs");
+			RegressionProblem cp;
+	        SampleManager samp=new SampleManager();
+			cp = new RegressionProblem("data/box.arff");
+	        Resample filter=new Resample();
+	        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
+	        filter.setInputFormat(cp.getData());
+	        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
+	        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","2"});
+	        Instances newTest = Filter.useFilter(cp.getData(), filter); 
+	        Gibbs gb=new Gibbs(newTrain, newTest, 10000, samp);
+	        gb.Sampling(cp.getData());
+	        gb.Manager.writeFile("Gibbs");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

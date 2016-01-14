@@ -8,7 +8,10 @@ import java.util.List;
 
 import regressions.KNN;
 import weka.classifiers.Evaluation;
+import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.neighboursearch.LinearNNSearch;
+import weka.core.neighboursearch.NearestNeighbourSearch;
 
 public class ModelManager {
 	public List<Segmentation> segmentations;
@@ -35,18 +38,18 @@ public class ModelManager {
 		for(int i=0;i<segmentations.size();i++){
 			if(segmentations.get(i).contains(cellID)){
 				segmentations.get(i).removeCell(cellID, data);
-				updateModel(segmentations.get(i));
+				updateModel(segmentations.get(i),i);
 			}
 			if(i==segID){
 				segmentations.get(i).addCell(cellID, data);
-				updateModel(segmentations.get(i));
+				updateModel(segmentations.get(i),i);
 			}
 		}
 	}
 	
-	public void updateModel(Segmentation seg){
+	public void updateModel(Segmentation seg,int segIndex){
 		for(int i:seg.cells){
-			modeledData.instance(i).setClassValue(seg.value);
+			modeledData.instance(i).setClassValue(segIndex);
 		}
 	}
 	
@@ -54,6 +57,11 @@ public class ModelManager {
 		for(int i=segmentations.size()-1;i>=0;i--){
 			if(segmentations.get(i).cells.isEmpty()){
 				segmentations.remove(i);
+				for(int j=0;j<modeledData.numInstances();j++){
+					if(modeledData.instance(j).classValue()>i){
+						modeledData.instance(j).setClassValue(modeledData.instance(j).classValue()-1);
+					}
+				}
 			}
 		}
 		if(segmentations.size()<modeledData.numInstances()){
@@ -78,10 +86,28 @@ public class ModelManager {
 		model= classifier;
 	}
 	
+	public double classifyInstance(Instance instance) throws Exception{
+		double segID=model.classifyInstance(instance);
+		return segmentations.get((int)segID).EX;
+	}
+	
 	public double modelEval(Instances validating) throws Exception{
 		 Evaluation eval = new Evaluation(modeledData);
          eval.evaluateModel(model, validating);
          return eval.correlationCoefficient();
+	}
+	
+	public double getLogLikelihood(Instances validating) throws Exception{
+		NearestNeighbourSearch m_NNSearch = new LinearNNSearch();
+		m_NNSearch.setInstances(modeledData);
+		double logLikelihood=0;
+		for(int i=0;i<validating.numInstances();i++){
+			Instance neighbor=m_NNSearch.nearestNeighbour(validating.instance(i));
+			double mean=segmentations.get((int)neighbor.classValue()).EX;
+			double var=segmentations.get((int)neighbor.classValue()).VAR;
+			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-Math.log(Math.sqrt(2*Math.PI)*mean);			
+		}
+		return logLikelihood;
 	}
 	
 	public List<Segmentation> deepCopySegmentations(){
