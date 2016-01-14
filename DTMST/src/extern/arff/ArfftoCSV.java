@@ -17,8 +17,8 @@ public class ArfftoCSV {
    * - ARFF input file
    * - CSV output file
    */
-	public static String csv="data/HousePrice.csv";
-	public static String arff="data/HousePrice.arff";
+	public static String csv="outputs/Gibbs/BaggingPrediction.csv";
+	public static String arff="outputs/Gibbs/BaggingPrediction.arff";
 	
 	public static void BatchConvert(CVOutput cv) throws IOException{
 		for(int i=0; i<cv.problems.size();i++){
@@ -41,31 +41,31 @@ public class ArfftoCSV {
   
 	public static void main(String[] args) throws Exception {
 // 
-//		// load CSV
-//		ArffLoader loader = new ArffLoader();
-//	    loader.setSource(new File(arff));
-//	    Instances data = loader.getDataSet();
-//	 
-//	    // save ARFF
-//	    CSVSaver saver = new CSVSaver();
-//	    saver.setInstances(data);
-//	    saver.setFile(new File(csv));
-//	    //saver.setDestination(new File(arff));
-//	    saver.writeBatch();
-	    
-	    
-		for(int i=0;i<10000;i=i+10){
 		// load CSV
-			ArffLoader loader = new ArffLoader();
-		    loader.setSource(new File("outputs/Gibbs/iteration_"+i+".arff"));
-		    Instances data = loader.getDataSet();
-		 
-		    // save ARFF
-		    CSVSaver saver = new CSVSaver();
-		    saver.setInstances(data);
-		    saver.setFile(new File("outputs/Gibbs/iteration_"+i+".csv"));
-		    //saver.setDestination(new File(arff));
-		    saver.writeBatch();
-		}
+		ArffLoader loader = new ArffLoader();
+	    loader.setSource(new File(arff));
+	    Instances data = loader.getDataSet();
+	 
+	    // save ARFF
+	    CSVSaver saver = new CSVSaver();
+	    saver.setInstances(data);
+	    saver.setFile(new File(csv));
+	    //saver.setDestination(new File(arff));
+	    saver.writeBatch();
+	    
+	    
+//		for(int i=0;i<10000;i=i+10){
+//		// load CSV
+//			ArffLoader loader = new ArffLoader();
+//		    loader.setSource(new File("outputs/Gibbs/iteration_"+i+".arff"));
+//		    Instances data = loader.getDataSet();
+//		 
+//		    // save ARFF
+//		    CSVSaver saver = new CSVSaver();
+//		    saver.setInstances(data);
+//		    saver.setFile(new File("outputs/Gibbs/iteration_"+i+".csv"));
+//		    //saver.setDestination(new File(arff));
+//		    saver.writeBatch();
+//		}
 	}
 }

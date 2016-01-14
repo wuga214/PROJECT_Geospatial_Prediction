@@ -41,26 +41,25 @@ public class Gibbs {
 				Manager.flipCellAssignment(j, sdsIndex, oregData);
 				Manager.removeEmptySegments();
 				//only sample 10 models!
-				
-				if((iteration-i)<=10&&j==oregData.numInstances()){
-					samples.addSample(Manager.deepCopySegmentations(),currentSampleWeight);
-				}
 			}
 			if(i%10.0==0.0){
-				Manager.buildClassifier();
-				Instances labeled = new Instances(wholedata);
-				for (int k = 0; k < wholedata.numInstances(); k++) {
-					//bug founded here! the training instance value is changed to segmentation index!!!!
-					double clsLabel = Manager.classifyInstance(wholedata.instance(k));
-					labeled.instance(k).setClassValue(clsLabel);
+				if((iteration-i)<=100){
+					samples.addSample(Manager.deepCopySegmentations(),currentSampleWeight);
 				}
-				// save labeled data
-				BufferedWriter writer = new BufferedWriter(
-						new FileWriter("outputs/Gibbs/iteration_"+i+".arff"));
-				writer.write(labeled.toString());
-				writer.newLine();
-				writer.flush();
-				writer.close();
+//				Manager.buildClassifier();
+//				Instances labeled = new Instances(wholedata);
+//				for (int k = 0; k < wholedata.numInstances(); k++) {
+//					//bug founded here! the training instance value is changed to segmentation index!!!!
+//					double clsLabel = Manager.classifyInstance(wholedata.instance(k));
+//					labeled.instance(k).setClassValue(clsLabel);
+//				}
+//				// save labeled data
+//				BufferedWriter writer = new BufferedWriter(
+//						new FileWriter("outputs/Gibbs/iteration_"+i+".arff"));
+//				writer.write(labeled.toString());
+//				writer.newLine();
+//				writer.flush();
+//				writer.close();
 			}
 		}
 	}
@@ -123,9 +122,14 @@ public class Gibbs {
 	        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
 	        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","2"});
 	        Instances newTest = Filter.useFilter(cp.getData(), filter); 
-	        Gibbs gb=new Gibbs(newTrain, newTest, 10000, samp);
+	        Gibbs gb=new Gibbs(newTrain, newTest, 1000, samp);
 	        gb.Sampling(cp.getData());
 	        gb.Manager.writeFile("Gibbs");
+	        samp.showSampleSize();
+	        samp.normalizeWeights();
+	        samp.createBaggingModel(newTrain);
+	        samp.batchPrediction(cp.getData());
+	        System.out.println("All results are under output/Gibbs folder");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
