@@ -105,7 +105,7 @@ public class ModelManager {
 			Instance neighbor=m_NNSearch.nearestNeighbour(validating.instance(i));
 			double mean=segmentations.get((int)neighbor.classValue()).EX;
 			double var=segmentations.get((int)neighbor.classValue()).VAR;
-			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-Math.log(Math.sqrt(2*Math.PI)*mean);			
+			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-0.5*Math.log(2*Math.PI*var);			
 		}
 		return logLikelihood;
 	}
