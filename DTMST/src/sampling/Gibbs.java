@@ -44,7 +44,7 @@ public class Gibbs {
 				//only sample 10 models!
 			}
 			if(i%10.0==0.0){
-				if((iteration-i)<=100){
+				if((iteration-i)<=200){
 					samples.addSample(Manager.deepCopySegmentations(),currentSampleWeight);
 				}
 				
@@ -84,10 +84,11 @@ public class Gibbs {
 		}
 		partition=largest+Math.log(exps);
 		//log likelihood now tune into likelihood, even still using name loglikelihood
+		double[] likeLihood=new double[logLikelihood.length];
 		double sum=0;
-		for(int i=0;i<logLikelihood.length;i++){
-			logLikelihood[i]=Math.exp(logLikelihood[i]-partition);
-			sum+=logLikelihood[i];
+		for(int i=0;i<likeLihood.length;i++){
+			likeLihood[i]=Math.exp(logLikelihood[i]-partition);
+			sum+=likeLihood[i];
 		}
 		
 		//Uniformly distributed random value
@@ -96,14 +97,14 @@ public class Gibbs {
 		double cumuDensity=0;
 		int sampleIndex=-1;
 		for(int i=0;i<segSize;i++){
-			cumuDensity+=logLikelihood[i];
+			cumuDensity+=likeLihood[i];
 			if(rand<=(cumuDensity/sum)){
 				sampleIndex=i;
 				break;
 			}
 		}
 		currentSampleWeight=logLikelihood[sampleIndex];
-		System.out.println("Sample likelihood:"+currentSampleWeight);
+		System.out.println("Sample Logged Likelihood:"+currentSampleWeight);
 		return sampleIndex;
 		/*
 		 * 1 find sampled segmentation index;

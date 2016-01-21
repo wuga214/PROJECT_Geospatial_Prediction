@@ -111,7 +111,7 @@ public class ModelManager {
 		for(int i=0;i<validating.numInstances();i++){
 			double mean=segmentations.get(segmentTracker[trainDataTracker[i]]).EX;
 			double var=segmentations.get(segmentTracker[trainDataTracker[i]]).VAR;
-			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-Math.log(Math.sqrt(2*Math.PI)*mean);			
+			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-0.5*Math.log(2*Math.PI*var);			
 		}
 		return logLikelihood;
 	}

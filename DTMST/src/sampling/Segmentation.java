@@ -66,13 +66,13 @@ public class Segmentation {
 			cells.remove(i);
 		}
 		updateVar();
-		if(VAR==0){
+		if(VAR==0||cells.size()==1){
 			useDefaultVar();
 		}
 	}
 	
 	public void useDefaultVar(){
-		VAR=100;
+		VAR=10;
 	}
 	
 	public void updateVar(){

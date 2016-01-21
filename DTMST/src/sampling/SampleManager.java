@@ -53,6 +53,7 @@ public class SampleManager {
 	}
 	
 	public void createBaggingModel(Instances instances){
+		weightNormalization();
 		Instances newInstances=new Instances(instances);
 		for(int i=0;i<newInstances.numInstances();i++){
 			double value=0;
@@ -63,6 +64,26 @@ public class SampleManager {
 			newInstances.instance(i).setClassValue(value);
 		}
 		adjustedData=newInstances;
+	}
+	
+	public void weightNormalization(){
+
+		double largest=-Double.MAX_VALUE;
+		double partition=0;
+		for(int i=0;i<weights.size();i++){
+			if(weights.get(i)>largest){
+				largest=weights.get(i);
+			}
+		}
+		double exps=0;
+		for(int i=0;i<weights.size();i++){
+			exps+=Math.exp(weights.get(i)-largest);
+		}
+		partition=largest+Math.log(exps);
+		//log likelihood now tune into likelihood, even still using name loglikelihood
+		for(int i=0;i<weights.size();i++){
+			weights.set(i,Math.exp(weights.get(i)-partition));
+		}
 	}
 	
 	public double predictLabel(Instance instance) throws Exception{
