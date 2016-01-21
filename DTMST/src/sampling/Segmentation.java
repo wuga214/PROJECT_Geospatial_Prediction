@@ -72,7 +72,7 @@ public class Segmentation {
 	}
 	
 	public void useDefaultVar(){
-		VAR=1000;
+		VAR=100;
 	}
 	
 	public void updateVar(){

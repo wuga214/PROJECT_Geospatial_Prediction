@@ -18,13 +18,14 @@ public class Gibbs {
 	public SampleManager samples;
 	public double currentSampleWeight;
 	
-	public Gibbs(Instances data, Instances valid, int iter, SampleManager samp){
+	public Gibbs(Instances data, Instances valid, int iter, SampleManager samp) throws Exception{
 		Manager=new ModelManager(data);
 		oregData=data;
 		validating=valid;
 		iteration=iter;
 		samples=samp;
 		currentSampleWeight=0;
+		Manager.findNearestNeighbour(validating);
 	}
 	
 	//Gibbs Sampling outer iterations: number of iterations and dimension selection without random selection(tuning around)
@@ -46,20 +47,20 @@ public class Gibbs {
 				if((iteration-i)<=100){
 					samples.addSample(Manager.deepCopySegmentations(),currentSampleWeight);
 				}
-//				Manager.buildClassifier();
-//				Instances labeled = new Instances(wholedata);
-//				for (int k = 0; k < wholedata.numInstances(); k++) {
-//					//bug founded here! the training instance value is changed to segmentation index!!!!
-//					double clsLabel = Manager.classifyInstance(wholedata.instance(k));
-//					labeled.instance(k).setClassValue(clsLabel);
-//				}
-//				// save labeled data
-//				BufferedWriter writer = new BufferedWriter(
-//						new FileWriter("outputs/Gibbs/iteration_"+i+".arff"));
-//				writer.write(labeled.toString());
-//				writer.newLine();
-//				writer.flush();
-//				writer.close();
+				
+				Instances labeled = new Instances(wholedata);
+				for (int k = 0; k < wholedata.numInstances(); k++) {
+					//bug founded here! the training instance value is changed to segmentation index!!!!
+					double clsLabel = Manager.classifyInstance(wholedata.instance(k));
+					labeled.instance(k).setClassValue(clsLabel);
+				}
+				// save labeled data
+				BufferedWriter writer = new BufferedWriter(
+						new FileWriter("outputs/Gibbs/iteration_"+i+".arff"));
+				writer.write(labeled.toString());
+				writer.newLine();
+				writer.flush();
+				writer.close();
 			}
 		}
 	}
@@ -102,6 +103,7 @@ public class Gibbs {
 			}
 		}
 		currentSampleWeight=logLikelihood[sampleIndex];
+		System.out.println("Sample likelihood:"+currentSampleWeight);
 		return sampleIndex;
 		/*
 		 * 1 find sampled segmentation index;
@@ -122,7 +124,7 @@ public class Gibbs {
 	        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
 	        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","2"});
 	        Instances newTest = Filter.useFilter(cp.getData(), filter); 
-	        Gibbs gb=new Gibbs(newTrain, newTest, 1000, samp);
+	        Gibbs gb=new Gibbs(newTrain, newTrain, 10000, samp);
 	        gb.Sampling(cp.getData());
 	        gb.Manager.writeFile("Gibbs");
 	        samp.showSampleSize();

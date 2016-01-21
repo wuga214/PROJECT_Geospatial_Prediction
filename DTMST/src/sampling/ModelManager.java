@@ -12,15 +12,19 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.neighboursearch.LinearNNSearch;
 import weka.core.neighboursearch.NearestNeighbourSearch;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.AddID;
 
 public class ModelManager {
 	public List<Segmentation> segmentations;
 	public Instances modeledData;
 	public KNN model;
-	
+	public int[] segmentTracker;
+	public int[] trainDataTracker;
+	public NearestNeighbourSearch NNSearcher;
 	//consider to initial manger with single segmentation, so gibbs can partition it into proper segmentations
 	//Change this tonight
-	public ModelManager(Instances data){
+	public ModelManager(Instances data) throws Exception{
 		modeledData=new Instances(data);
 		segmentations=new ArrayList<Segmentation>();
 		Segmentation segment=new Segmentation();
@@ -29,9 +33,17 @@ public class ModelManager {
 		}
 		segmentations.add(segment);
 		segmentations.add(new Segmentation());
-//		for(int i=0;i<modeledData.numInstances();i++){
-//			segmentations.add(new Segmentation(i,modeledData));
-//		}
+		segmentTracker=new int[data.numInstances()]; 
+		for(int i=0;i<modeledData.numInstances();i++){
+			modeledData.instance(i).setClassValue(i);
+		}
+		buildNNSearcher();
+	}
+	
+	public void buildNNSearcher() throws Exception{
+		NearestNeighbourSearch m_NNSearch = new LinearNNSearch();
+		m_NNSearch.setInstances(modeledData);
+		NNSearcher=m_NNSearch;
 	}
 	
 	public void flipCellAssignment(int cellID, int segID, Instances data){
@@ -49,7 +61,7 @@ public class ModelManager {
 	
 	public void updateModel(Segmentation seg,int segIndex){
 		for(int i:seg.cells){
-			modeledData.instance(i).setClassValue(segIndex);
+			segmentTracker[i]=segIndex;
 		}
 	}
 	
@@ -57,14 +69,15 @@ public class ModelManager {
 		for(int i=segmentations.size()-1;i>=0;i--){
 			if(segmentations.get(i).cells.isEmpty()){
 				segmentations.remove(i);
-				for(int j=0;j<modeledData.numInstances();j++){
-					if(modeledData.instance(j).classValue()>i){
-						modeledData.instance(j).setClassValue(modeledData.instance(j).classValue()-1);
+				for(int j=0;j<segmentTracker.length;j++){
+					if(segmentTracker[j]>i){
+						segmentTracker[j]=segmentTracker[j]-1;
 					}
 				}
 			}
 		}
-		if(segmentations.size()<modeledData.numInstances()){
+		//if(segmentations.size()<modeledData.numInstances()){
+		if(segmentations.size()<4){
 			segmentations.add(new Segmentation());
 		}
 	}
@@ -79,32 +92,25 @@ public class ModelManager {
 		return segIndex;
 	}
 	
-	public void buildClassifier() throws Exception{
-		KNN classifier = new KNN();
-		classifier.setOptions(new String[]{"-K","1"});
-		classifier.buildClassifier(modeledData);
-		model= classifier;
+	public void findNearestNeighbour(Instances validating) throws Exception{
+		trainDataTracker=new int[validating.numInstances()];
+		for(int i=0;i<validating.numInstances();i++){
+			Instance neighbor=NNSearcher.nearestNeighbour(validating.instance(i));
+			trainDataTracker[i]=(int)neighbor.classValue();
+		}
 	}
 	
-	public double classifyInstance(Instance instance) throws Exception{
-		double segID=model.classifyInstance(instance);
-		return segmentations.get((int)segID).EX;
+	public double classifyInstance(Instance inst) throws Exception{
+		Instance neighbor=NNSearcher.nearestNeighbour(inst);
+		return segmentations.get(segmentTracker[(int)neighbor.classValue()]).EX;
 	}
 	
-	public double modelEval(Instances validating) throws Exception{
-		 Evaluation eval = new Evaluation(modeledData);
-         eval.evaluateModel(model, validating);
-         return eval.correlationCoefficient();
-	}
 	
 	public double getLogLikelihood(Instances validating) throws Exception{
-		NearestNeighbourSearch m_NNSearch = new LinearNNSearch();
-		m_NNSearch.setInstances(modeledData);
 		double logLikelihood=0;
 		for(int i=0;i<validating.numInstances();i++){
-			Instance neighbor=m_NNSearch.nearestNeighbour(validating.instance(i));
-			double mean=segmentations.get((int)neighbor.classValue()).EX;
-			double var=segmentations.get((int)neighbor.classValue()).VAR;
+			double mean=segmentations.get(segmentTracker[trainDataTracker[i]]).EX;
+			double var=segmentations.get(segmentTracker[trainDataTracker[i]]).VAR;
 			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-Math.log(Math.sqrt(2*Math.PI)*mean);			
 		}
 		return logLikelihood;
