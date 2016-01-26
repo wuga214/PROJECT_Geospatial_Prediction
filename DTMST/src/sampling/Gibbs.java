@@ -10,6 +10,11 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
+/**
+ * @author Wuga
+ * Need to embed Gibbs voronoi merging classifier into WEKA Classifier to run cross validation for later convenience
+ * Trained model by maximize likelihood, choose model by RMSE and output is also RMSE
+ */
 public class Gibbs {
 	public ModelManager Manager;
 	public Instances oregData;
@@ -18,23 +23,29 @@ public class Gibbs {
 	public SampleManager samples;
 	public double currentSampleWeight;
 	
-	public Gibbs(Instances data, Instances valid, int iter, SampleManager samp) throws Exception{
-		Manager=new ModelManager(data);
+	
+	public Gibbs(Instances data, Instances valid, int iter, int lablenum, SampleManager samp) throws Exception{
+		Manager=new ModelManager(data,lablenum);
 		oregData=data;
 		validating=valid;
 		iteration=iter;
 		samples=samp;
-		currentSampleWeight=0;
 		Manager.findNearestNeighbour(validating);
 	}
 	
 	//Gibbs Sampling outer iterations: number of iterations and dimension selection without random selection(tuning around)
-	public void Sampling(Instances wholedata) throws Exception{
-		System.out.println("Number of training data:"+oregData.numInstances());
+	
+	/**
+	 * Here the parameter need is for plot, which is not related to Gibbs Samping!!
+	 * @param whole data
+	 * @throws Exception
+	 */
+	public void Sampling(Instances wholedata, boolean debug) throws Exception{
+		//System.out.println("Number of training data:"+oregData.numInstances());
 		//Gibbs Sampling outer layer: iteration of full dimensions route
 		for(int i=0;i<iteration;i++){
-			System.out.println("iteration:"+(i+1));
-			System.out.println("Number of Segmentations:"+Manager.segmentations.size());
+			//System.out.println("iteration:"+(i+1));
+			//System.out.println("Number of Segmentations:"+Manager.segmentations.size());
 			//Gibbs Samping inner layer: sampling for each dimension
 			for(int j=0;j<oregData.numInstances();j++){
 				//taking sample value of the dimension through singleDimensionSampling() function
@@ -45,22 +56,24 @@ public class Gibbs {
 			}
 			if(i%10.0==0.0){
 				if((iteration-i)<=200){
-					samples.addSample(Manager.deepCopySegmentations(),currentSampleWeight);
+					samples.addSample(Manager.deepCopySegmentations());
 				}
 				
-				Instances labeled = new Instances(wholedata);
-				for (int k = 0; k < wholedata.numInstances(); k++) {
-					//bug founded here! the training instance value is changed to segmentation index!!!!
-					double clsLabel = Manager.classifyInstance(wholedata.instance(k));
-					labeled.instance(k).setClassValue(clsLabel);
+				if(debug==true){
+					Instances labeled = new Instances(wholedata);
+					for (int k = 0; k < wholedata.numInstances(); k++) {
+						//bug founded here! the training instance value is changed to segmentation index!!!!
+						double clsLabel = Manager.classifyInstance(wholedata.instance(k));
+						labeled.instance(k).setClassValue(clsLabel);
+					}
+					// save labeled data
+					BufferedWriter writer = new BufferedWriter(
+							new FileWriter("outputs/Gibbs/iteration_"+i+".arff"));
+					writer.write(labeled.toString());
+					writer.newLine();
+					writer.flush();
+					writer.close();
 				}
-				// save labeled data
-				BufferedWriter writer = new BufferedWriter(
-						new FileWriter("outputs/Gibbs/iteration_"+i+".arff"));
-				writer.write(labeled.toString());
-				writer.newLine();
-				writer.flush();
-				writer.close();
 			}
 		}
 	}
@@ -103,8 +116,7 @@ public class Gibbs {
 				break;
 			}
 		}
-		currentSampleWeight=logLikelihood[sampleIndex];
-		System.out.println("Sample Logged Likelihood:"+currentSampleWeight);
+		//System.out.println("Sample Logged Likelihood:"+currentSampleWeight);
 		return sampleIndex;
 		/*
 		 * 1 find sampled segmentation index;
@@ -125,11 +137,10 @@ public class Gibbs {
 	        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
 	        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","2"});
 	        Instances newTest = Filter.useFilter(cp.getData(), filter); 
-	        Gibbs gb=new Gibbs(newTrain, newTrain, 10000, samp);
-	        gb.Sampling(cp.getData());
+	        Gibbs gb=new Gibbs(newTrain, newTest, 1000,4, samp);
+	        gb.Sampling(cp.getData(),true);
 	        gb.Manager.writeFile("Gibbs");
 	        samp.showSampleSize();
-	        samp.normalizeWeights();
 	        samp.createBaggingModel(newTrain);
 	        samp.batchPrediction(cp.getData());
 	        System.out.println("All results are under output/Gibbs folder");

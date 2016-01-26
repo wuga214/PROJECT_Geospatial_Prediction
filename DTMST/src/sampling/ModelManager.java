@@ -22,8 +22,13 @@ public class ModelManager {
 	public int[] segmentTracker;
 	public int[] trainDataTracker;
 	public NearestNeighbourSearch NNSearcher;
-	//consider to initial manger with single segmentation, so gibbs can partition it into proper segmentations
-	//Change this tonight
+	public int Hyperparameter;
+	
+	public ModelManager(Instances data, int hyper) throws Exception{
+		this(data);
+		Hyperparameter=hyper;
+	}
+
 	public ModelManager(Instances data) throws Exception{
 		modeledData=new Instances(data);
 		segmentations=new ArrayList<Segmentation>();
@@ -38,6 +43,7 @@ public class ModelManager {
 			modeledData.instance(i).setClassValue(i);
 		}
 		buildNNSearcher();
+		Hyperparameter=modeledData.numInstances();
 	}
 	
 	public void buildNNSearcher() throws Exception{
@@ -76,8 +82,8 @@ public class ModelManager {
 				}
 			}
 		}
-		//if(segmentations.size()<modeledData.numInstances()){
-		if(segmentations.size()<4){
+		if(segmentations.size()<Hyperparameter){
+		//if(segmentations.size()<4){
 			segmentations.add(new Segmentation());
 		}
 	}
@@ -132,13 +138,6 @@ public class ModelManager {
 		writer.flush();
 		writer.close();
 	}
-	/*
-	 * Using KNN is not good idea here, this is just an temperal method for making Gibbs sampling work.
-	 * I expect to use maximum likelihood estimation of mu and sigma instead of only mu here, so that we can use maximum
-	 * likelihood to evaluate model weight but not correlation coefficient, which is undesirable.
-	 * 
-	 * But computing variance when segmentation assignment flipping is expensive, looking for incremental method for this.
-	 */
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
