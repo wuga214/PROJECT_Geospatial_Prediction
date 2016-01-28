@@ -14,7 +14,7 @@ Progress
 
 Table
 ===
-![alt tag](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/plots/eval.png)
+![alt tag](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/eval.png)
 
 Comparasion
 ===
