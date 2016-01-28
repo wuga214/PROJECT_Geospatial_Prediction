@@ -14,7 +14,7 @@ Progress
 
 Table
 ===
-![alt tag](https://github.com/wuga214/Geospatial_Prediction/blob/master/eval.png)
+![alt tag](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/plots/eval.png)
 
 Comparasion
 ===
@@ -30,13 +30,13 @@ Synthetic data
 3D Results Plots
 ===
 Box:
-![box](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_box.png)
+![box](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/plots/result_box.png)
 Circles:
-![circles](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_circles.png)
+![circles](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/plots/result_circles.png)
 Stair:
-![stair](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_stair.png)
+![stair](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/plots/result_stair.png)
 Cake:
-![cake](https://github.com/wuga214/Geospatial_Prediction/blob/master/plots/result_cake.png)
+![cake](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/plots/result_cake.png)
 
 Gibbs Result Plot with bagging
 ===
