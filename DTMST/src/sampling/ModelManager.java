@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import regressions.KNN;
@@ -56,7 +57,6 @@ public class ModelManager {
 		for(int i=0;i<segmentations.size();i++){
 			if(segmentations.get(i).contains(cellID)){
 				segmentations.get(i).removeCell(cellID, data);
-				updateModel(segmentations.get(i),i);
 			}
 			if(i==segID){
 				segmentations.get(i).addCell(cellID, data);
@@ -117,15 +117,25 @@ public class ModelManager {
 		for(int i=0;i<validating.numInstances();i++){
 			double mean=segmentations.get(segmentTracker[trainDataTracker[i]]).EX;
 			double var=segmentations.get(segmentTracker[trainDataTracker[i]]).VAR;
+			if(var==0){
+			System.out.println("Error variance is zero!");
+			System.out.println("Segmentation size : "+segmentations.size());
+			System.out.println("Corrent Segmentation id : "+segmentTracker[trainDataTracker[i]]);
+			}
 			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-0.5*Math.log(2*Math.PI*var);			
 		}
+//		System.out.println("Tracker £º"+Arrays.toString(segmentTracker));
+//		for(int q=0;q<segmentations.size();q++){
+//			System.out.println("segmentation_"+q+" contains "+segmentations.get(q).cells.toString()+" var:"+segmentations.get(q).VAR);
+//		}
+//		System.out.println("LogLikelihood :"+logLikelihood);
 		return logLikelihood;
 	}
 	
 	public List<Segmentation> deepCopySegmentations(){
 		List<Segmentation> newList=new ArrayList<Segmentation>();
-		for(Segmentation p : segmentations) {
-		    newList.add(p.clone());
+		for(int i=0;i<segmentations.size();i++) {
+		    newList.add(segmentations.get(i).clone());
 		}
 		return newList;
 	}

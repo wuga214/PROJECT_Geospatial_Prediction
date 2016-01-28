@@ -73,7 +73,7 @@ public class Algorithms {
 			
 		case GIBBS_VORONOI_MERGING :
 			param.put("-I",Sets.newHashSet("-I 1000"));
-			param.put("-L",Sets.newHashSet("-L 2", "-L 3", "-L 4", "-L 5", "-L 6", "-L 7", "-L 8", "-L 9", "-L 10"));
+			param.put("-L",Sets.newHashSet("-L 1","-L 2","-L 3","-L 4","-L 5","-L 6","-L 7","-L 8","-L 9","-L 10"));
 			break;
 
 		case MINIMUM_SPANNING_TREE_MERGING :

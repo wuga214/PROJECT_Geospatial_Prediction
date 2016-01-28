@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import sampling.Gibbs;
 import sampling.SampleManager;
+import utils.RandomPermutation;
 import utils.RegressionProblem;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -16,6 +17,10 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
 public class GibbsMerging extends Classifier{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3126934031726996304L;
 	public SampleManager samp;
 	public int iteration;
 	public int labelRestriction;
@@ -30,6 +35,7 @@ public class GibbsMerging extends Classifier{
 	public void buildClassifier(Instances arg0) throws Exception {
 		Gibbs gb=new Gibbs(arg0, arg0, iteration,labelRestriction, samp);
         gb.Sampling(arg0,false);
+        //samp.sampleReport();
         samp.createBaggingModel(arg0);
 	}
 	
@@ -65,32 +71,32 @@ public class GibbsMerging extends Classifier{
         options[0] = "-I";//number of merging required!!
         options[1] = Integer.toString(iteration);
         options[2] = "-L";//number of different label restricted
-        options[1] = Integer.toString(labelRestriction);
+        options[3] = Integer.toString(labelRestriction);
         return options;
     }
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
-			for(int i=2;i<=10;i++){
 			RegressionProblem cp = new RegressionProblem("data/box.arff");
+			RandomPermutation randPerm=new RandomPermutation();
+			randPerm.getRandomPermutation(cp.getData());
+			Instances data=new Instances(randPerm.permutated);
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			GibbsMerging classifier=new GibbsMerging();
-			classifier.setOptions(new String[]{"-I","1000","-L",Integer.toString(i)});
+			classifier.setOptions(new String[]{"-I","1000","-L","10"});
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
-			filter.setInputFormat(cp.getData());
-			Instances newTrain = Filter.useFilter(cp.getData(), filter);
+			filter.setInputFormat(data);
+			Instances newTrain = Filter.useFilter(data, filter);
 			classifier.buildClassifier(newTrain);
-			filter.setOptions(new String[]{"-Z","10","-no-replacement","-S","2"});
-            Instances newTest = Filter.useFilter(cp.getData(), filter); 
+			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","2"});
+            Instances newTest = Filter.useFilter(data, filter); 
             Evaluation eval = new Evaluation(newTrain);
             eval.evaluateModel(classifier, newTest);
             //System.out.println(eval.toSummaryString("\nResults\n======\n", false));
             //System.out.println(i+","+eval.correlationCoefficient());
-            System.out.println(i+","+eval.correlationCoefficient());
-            }
-		
+            System.out.println(eval.correlationCoefficient());		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

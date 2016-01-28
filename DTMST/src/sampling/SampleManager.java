@@ -1,10 +1,12 @@
 package sampling;
 
+import java.io.Serializable;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import weka.classifiers.Classifier;
 import weka.core.Instance;
@@ -12,7 +14,11 @@ import weka.core.Instances;
 import weka.core.neighboursearch.LinearNNSearch;
 import weka.core.neighboursearch.NearestNeighbourSearch;
 
-public class SampleManager {
+public class SampleManager implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7429069846251542457L;
 	public List<List<Segmentation>> sampleRecords;
 	public Instances adjustedData;
 	public NearestNeighbourSearch NNSearcher;
@@ -42,6 +48,7 @@ public class SampleManager {
 	
 	public void createBaggingModel(Instances instances) throws Exception{
 //		weightNormalization();
+		
 		Instances newInstances=new Instances(instances);
 		for(int i=0;i<newInstances.numInstances();i++){
 			double value=0;
@@ -96,5 +103,18 @@ public class SampleManager {
 		writer.newLine();
 		writer.flush();
 		writer.close();
+	}
+	
+	public void sampleReport(){
+		showSampleSize();
+		for(int i=0;i<sampleRecords.size();i++){
+			System.out.println("SAMPLE ID:"+i);
+			System.out.println("===================");
+			for(int j=0;j<sampleRecords.get(i).size();j++){
+				System.out.println(sampleRecords.get(i).get(j).cells.toString());
+			}
+			System.out.println("======+end=========\n\n");
+			
+		}
 	}
 }

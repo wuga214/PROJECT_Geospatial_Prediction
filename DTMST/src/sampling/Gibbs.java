@@ -3,6 +3,7 @@ package sampling;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 import regressions.KNN;
 import utils.RegressionProblem;
@@ -53,6 +54,10 @@ public class Gibbs {
 				Manager.flipCellAssignment(j, sdsIndex, oregData);
 				Manager.removeEmptySegments();
 				//only sample 10 models!
+//				System.out.println(sdsIndex);
+//				for(int q=0;q<Manager.segmentations.size();q++){
+//					System.out.println("Seg_"+q+" contains "+Manager.segmentations.get(q).cells.toString());
+//				}
 			}
 			if(i%10.0==0.0){
 				if((iteration-i)<=200){
@@ -116,6 +121,10 @@ public class Gibbs {
 				break;
 			}
 		}
+//		if(sampleIndex==-1){
+//			System.out.println("encounter error that sampled index is -1, current cumuDensity is "+cumuDensity);
+//			System.out.println("Log Likelihood:"+Arrays.toString(logLikelihood));
+//			}
 		//System.out.println("Sample Logged Likelihood:"+currentSampleWeight);
 		return sampleIndex;
 		/*
