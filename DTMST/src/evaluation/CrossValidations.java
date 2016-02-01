@@ -15,6 +15,7 @@ import regressions.EProblemList;
 import regressions.ERegressionList;
 import regressions.MAPofBMA;
 import regressions.Problems;
+import utils.RandomPermutation;
 import utils.RegressionProblem;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -45,7 +46,9 @@ public class CrossValidations {
 	}
 	
 	public static List<FoldRecord> batchCrossValidation(RegressionProblem cp) throws Exception{
-		Instances data=cp.getData();
+		RandomPermutation randPerm=new RandomPermutation();
+		randPerm.getRandomPermutation(cp.getData());
+		Instances data=randPerm.permutated;
 		Resample filter=new Resample();
 		filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
 		filter.setInputFormat(data);
@@ -80,11 +83,11 @@ public class CrossValidations {
 		      System.out.println(eval.toSummaryString("=== test dataset result ===", false));
 		    probresults.add(new FoldRecord(bestSetting.name,bestSetting.settings));
 		}
-		probresults=multipleRun(probresults,cp);
+		probresults=multipleRun(probresults,randPerm.permutated);
 		return probresults;
 	}
 	
-	public static List<FoldRecord> multipleRun(List<FoldRecord> records, RegressionProblem cp ) throws Exception{
+	public static List<FoldRecord> multipleRun(List<FoldRecord> records, Instances permutated ) throws Exception{
 		int m=records.size();
 		int iteration=50;
 		double[][] corr=new double[iteration][m];
@@ -92,7 +95,7 @@ public class CrossValidations {
 		double[][] mae=new double[iteration][m];
 		for(int i=0;i<iteration;i++){
 			Random rand=new Random();
-			Instances data=cp.getData();
+			Instances data=permutated;
 			data.randomize(rand);
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});

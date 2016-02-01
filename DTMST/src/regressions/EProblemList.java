@@ -5,6 +5,6 @@ public enum EProblemList {
 	SyntheticCircles,
 	SyntheticStair,
 	SyntheticCake,
-	SanFranciscoHousePrice,
-	USTemperature,
+//	SanFranciscoHousePrice,
+//	USTemperature,
 }

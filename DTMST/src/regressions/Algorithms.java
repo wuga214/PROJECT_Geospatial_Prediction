@@ -35,9 +35,14 @@ public class Algorithms {
 			ret = new KNN();
 			break;
 			
+		case GIBBS_VORONOI_MERGING:
+			ret = new GibbsMerging();
+			break;
+			
 		case MINIMUM_SPANNING_TREE_MERGING :
 			ret = new MAPofBMA(-200,-200,300,300);
 			break;
+			
 		case MST_HYPERPLATE_FITTING:
 			ret = new MTSMLinearHyperPlate(-200,-200,300,300);
 			break;
@@ -64,6 +69,11 @@ public class Algorithms {
 		case KNN :
 			param.put("-H",Sets.newHashSet("-K 1","-K 2","-K 3","-K 4","-K 5"));
 			param.put("-F",Sets.newHashSet("-F"));
+			break;
+			
+		case GIBBS_VORONOI_MERGING :
+			param.put("-I",Sets.newHashSet("-I 1000"));
+			param.put("-L",Sets.newHashSet("-L 1","-L 2","-L 3","-L 4","-L 5","-L 6","-L 7","-L 8","-L 9","-L 10"));
 			break;
 
 		case MINIMUM_SPANNING_TREE_MERGING :

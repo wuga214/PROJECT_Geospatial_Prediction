@@ -1,10 +1,15 @@
 package sampling;
 
 import java.util.HashSet;
+import java.io.Serializable;
 
 import weka.core.Instances;
 
-public class Segmentation {
+public class Segmentation implements Serializable{/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8765348527663816963L;
+
 	public HashSet<Integer> cells;
 	public double EX;
 	public double EXS;
@@ -52,7 +57,7 @@ public class Segmentation {
 		EXS=EXS+(Math.pow(data.instance(i).classValue(),2)-EXS)/(cells.size()+1);
 		cells.add(i);
 		updateVar();
-		if(VAR==0){
+		if(VAR==0 || VAR<0.001){
 			useDefaultVar();
 		}
 	}
@@ -66,13 +71,17 @@ public class Segmentation {
 			cells.remove(i);
 		}
 		updateVar();
+<<<<<<< HEAD
+		if(VAR==0|| VAR<0.001||cells.size()==1){
+=======
 		if(VAR==0||cells.size()==1){
+>>>>>>> master
 			useDefaultVar();
 		}
 	}
 	
 	public void useDefaultVar(){
-		VAR=1000;
+		VAR=10;
 	}
 	
 	public void updateVar(){

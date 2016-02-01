@@ -1,10 +1,12 @@
 package sampling;
 
+import java.io.Serializable;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import weka.classifiers.Classifier;
 import weka.core.Instance;
@@ -12,34 +14,26 @@ import weka.core.Instances;
 import weka.core.neighboursearch.LinearNNSearch;
 import weka.core.neighboursearch.NearestNeighbourSearch;
 
-public class SampleManager {
+public class SampleManager implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7429069846251542457L;
 	public List<List<Segmentation>> sampleRecords;
-	public List<Double> weights;
 	public Instances adjustedData;
+	public NearestNeighbourSearch NNSearcher;
 	
 	public SampleManager(){
 		sampleRecords=new ArrayList<List<Segmentation>>();
-		weights=new ArrayList<Double>();
 		
 	}
 	
-	public void addSample(List<Segmentation> sample,double w){
+	public void addSample(List<Segmentation> sample){
 		sampleRecords.add(sample);
-		weights.add(w);
 	}
 	
 	public void showSampleSize(){
-		System.out.println("Current Samples Collected:"+weights.size());
-	}
-	
-	public void normalizeWeights(){
-		 double sum=0;
-		 for(double x:weights){
-			 sum+=x;
-		 }
-		 for(double x:weights){
-			 x=x/sum;
-		 }
+		System.out.println("Current Samples Collected:"+sampleRecords.size());
 	}
 	
 	public int findSegmentIndex(int cellID, List<Segmentation> segmentations){
@@ -52,23 +46,45 @@ public class SampleManager {
 		return segIndex;
 	}
 	
-	public void createBaggingModel(Instances instances){
+	public void createBaggingModel(Instances instances) throws Exception{
+//		weightNormalization();
+		
 		Instances newInstances=new Instances(instances);
 		for(int i=0;i<newInstances.numInstances();i++){
 			double value=0;
 			for(int j=0;j<sampleRecords.size();j++){
 				int segIndex=findSegmentIndex(i,sampleRecords.get(j));
-				value+=sampleRecords.get(j).get(segIndex).EX*weights.get(j);				
+				value+=sampleRecords.get(j).get(segIndex).EX*(1.0/sampleRecords.size());				
 			}
 			newInstances.instance(i).setClassValue(value);
 		}
 		adjustedData=newInstances;
+		NNSearcher= new LinearNNSearch();
+		NNSearcher.setInstances(adjustedData);
 	}
 	
+//	public void weightNormalization(){
+//
+//		double largest=-Double.MAX_VALUE;
+//		double partition=0;
+//		for(int i=0;i<weights.size();i++){
+//			if(weights.get(i)>largest){
+//				largest=weights.get(i);
+//			}
+//		}
+//		double exps=0;
+//		for(int i=0;i<weights.size();i++){
+//			exps+=Math.exp(weights.get(i)-largest);
+//		}
+//		partition=largest+Math.log(exps);
+//		//log likelihood now tune into likelihood, even still using name loglikelihood
+//		for(int i=0;i<weights.size();i++){
+//			weights.set(i,Math.exp(weights.get(i)-partition));
+//		}
+//	}
+	
 	public double predictLabel(Instance instance) throws Exception{
-		NearestNeighbourSearch m_NNSearch = new LinearNNSearch();
-		m_NNSearch.setInstances(adjustedData);
-		Instance neighbor=m_NNSearch.nearestNeighbour(instance);
+		Instance neighbor=NNSearcher.nearestNeighbour(instance);
 		return neighbor.classValue();
 	}
 	
@@ -79,6 +95,7 @@ public class SampleManager {
 			double clsLabel = predictLabel(test.instance(k));
 			labeled.instance(k).setClassValue(clsLabel);
 		}
+		// Modify this function to predict with likelihood
 		// save labeled data
 		BufferedWriter writer = new BufferedWriter(
 				new FileWriter("outputs/Gibbs/BaggingPrediction.arff"));
@@ -86,5 +103,18 @@ public class SampleManager {
 		writer.newLine();
 		writer.flush();
 		writer.close();
+	}
+	
+	public void sampleReport(){
+		showSampleSize();
+		for(int i=0;i<sampleRecords.size();i++){
+			System.out.println("SAMPLE ID:"+i);
+			System.out.println("===================");
+			for(int j=0;j<sampleRecords.get(i).size();j++){
+				System.out.println(sampleRecords.get(i).get(j).cells.toString());
+			}
+			System.out.println("======+end=========\n\n");
+			
+		}
 	}
 }
