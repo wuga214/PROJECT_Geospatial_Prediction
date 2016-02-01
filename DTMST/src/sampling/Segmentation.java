@@ -71,7 +71,11 @@ public class Segmentation implements Serializable{/**
 			cells.remove(i);
 		}
 		updateVar();
+<<<<<<< HEAD
 		if(VAR==0|| VAR<0.001||cells.size()==1){
+=======
+		if(VAR==0||cells.size()==1){
+>>>>>>> master
 			useDefaultVar();
 		}
 	}

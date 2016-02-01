@@ -115,6 +115,7 @@ public class ModelManager {
 	public double getLogLikelihood(Instances validating) throws Exception{
 		double logLikelihood=0;
 		for(int i=0;i<validating.numInstances();i++){
+<<<<<<< HEAD
 			double mean=segmentations.get(segmentTracker[trainDataTracker[i]]).EX;
 			double var=segmentations.get(segmentTracker[trainDataTracker[i]]).VAR;
 			if(var==0){
@@ -122,6 +123,11 @@ public class ModelManager {
 			System.out.println("Segmentation size : "+segmentations.size());
 			System.out.println("Corrent Segmentation id : "+segmentTracker[trainDataTracker[i]]);
 			}
+=======
+			Instance neighbor=m_NNSearch.nearestNeighbour(validating.instance(i));
+			double mean=segmentations.get((int)neighbor.classValue()).EX;
+			double var=segmentations.get((int)neighbor.classValue()).VAR;
+>>>>>>> master
 			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-0.5*Math.log(2*Math.PI*var);			
 		}
 //		System.out.println("Tracker £º"+Arrays.toString(segmentTracker));
