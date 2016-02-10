@@ -19,7 +19,6 @@ import weka.filters.unsupervised.attribute.AddID;
 public class ModelManager {
 	public List<Segmentation> segmentations;
 	public Instances modeledData;
-	public KNN model;
 	public int[] segmentTracker;
 	public int[] trainDataTracker;
 	public NearestNeighbourSearch NNSearcher;

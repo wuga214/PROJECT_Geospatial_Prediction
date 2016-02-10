@@ -94,9 +94,9 @@ public class CrossValidations {
 		double[][] rmse=new double[iteration][m];
 		double[][] mae=new double[iteration][m];
 		for(int i=0;i<iteration;i++){
-			Random rand=new Random();
-			Instances data=permutated;
-			data.randomize(rand);
+			RandomPermutation randPerm=new RandomPermutation();
+			randPerm.getRandomPermutation(permutated);
+			Instances data=randPerm.permutated;
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
 			filter.setInputFormat(data);

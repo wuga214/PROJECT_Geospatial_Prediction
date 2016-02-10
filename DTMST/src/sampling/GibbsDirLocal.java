@@ -3,9 +3,16 @@ package sampling;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
+import delaunay.BowyerWatson;
 import regressions.KNN;
+import structure.DEdge;
+import structure.DPoint;
+import utils.InstancesToPoints;
 import utils.RegressionProblem;
 import weka.core.Instances;
 import weka.filters.Filter;
@@ -16,22 +23,27 @@ import weka.filters.unsupervised.instance.Resample;
  * Need to embed Gibbs voronoi merging classifier into WEKA Classifier to run cross validation for later convenience
  * Trained model by maximize likelihood, choose model by RMSE and output is also RMSE
  */
-public class Gibbs {
+public class GibbsDirLocal {
 	public ModelManager Manager;
 	public Instances oregData;
 	public Instances validating;
 	public int iteration;
 	public SampleManager samples;
 	public double currentSampleWeight;
+	public HashMap<Integer, HashSet<Integer>> voronoiMapping;
 	
 	
-	public Gibbs(Instances data, Instances valid, int iter, int lablenum, SampleManager samp) throws Exception{
+	public GibbsDirLocal(Instances data, Instances valid, int iter, int lablenum, SampleManager samp) throws Exception{
 		Manager=new ModelManager(data,lablenum);
 		oregData=data;
 		validating=valid;
 		iteration=iter;
 		samples=samp;
 		Manager.findNearestNeighbour(validating);
+		ArrayList<DPoint> points=InstancesToPoints.transfer(Manager.modeledData);
+		BowyerWatson bw=new BowyerWatson(-200,-200,300,300,points);
+		HashSet<DEdge> full_edges=bw.getPrunEdges();
+		voronoiMapping = getVoronoiMapping(full_edges, points);
 	}
 	
 	//Gibbs Sampling outer iterations: number of iterations and dimension selection without random selection(tuning around)
@@ -90,8 +102,17 @@ public class Gibbs {
 		double largest=-Double.MAX_VALUE;
 		double partition=0;
 		double alpha=0.01;
+		//for(int i=0;i<segSize;i++){
+		HashSet<Integer> voronoineighbors = voronoiMapping.get(dimIndex);
+		int[] subsegindexes = new int[voronoineighbors.size()+1];
+		int j=0;
+		for(int k:voronoineighbors){
+			subsegindexes[j]=Manager.segmentTracker[k];
+			j++;
+		}
+		subsegindexes[j]= segSize-1;
 		double n=Manager.segmentTracker.length;
-		for(int i=0;i<segSize;i++){
+		for(int i:subsegindexes){
 			Manager.flipCellAssignment(dimIndex, i, oregData);
 			double ni=Manager.segmentations.get(i).cells.size();
 			if(ni==1){
@@ -140,6 +161,22 @@ public class Gibbs {
 		 * 3 clean up empty segmentations
 		 */
 	}
+	
+	public HashMap<Integer, HashSet<Integer>> getVoronoiMapping(HashSet<DEdge> edges, ArrayList<DPoint> points){
+		HashMap<Integer, HashSet<Integer>> voronoi_neighbor_mapping = new HashMap<Integer, HashSet<Integer>>();
+		for(DPoint point:points){
+			HashSet<Integer> neighbor_index=new HashSet<Integer>(); 
+			for(DEdge edge:edges){
+				if(edge.contains(point)){
+					neighbor_index.add((int)edge.p[0].value);
+					neighbor_index.add((int)edge.p[1].value);
+				}
+			}
+			neighbor_index.remove((int)point.value);
+			voronoi_neighbor_mapping.put((int)point.value, neighbor_index);
+		}
+		return voronoi_neighbor_mapping;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -153,7 +190,7 @@ public class Gibbs {
 	        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
 	        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","2"});
 	        Instances newTest = Filter.useFilter(cp.getData(), filter); 
-	        Gibbs gb=new Gibbs(newTrain, newTrain, 1000,newTrain.numInstances(), samp);
+	        GibbsDirLocal gb=new GibbsDirLocal(newTrain, newTrain, 1000,newTrain.numInstances(), samp);
 	        gb.Sampling(cp.getData(),true);
 	        gb.Manager.writeFile("Gibbs");
 	        samp.showSampleSize();
