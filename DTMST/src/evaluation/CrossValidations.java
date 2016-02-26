@@ -35,26 +35,14 @@ public class CrossValidations {
 			clsCopy.buildClassifier(train);
 	        eval.evaluateModel(clsCopy, valid);
 		}
-//	      System.out.println();
-//	      System.out.println("=== Setup run ===");
-//	      System.out.println("Classifier: " + classifier.getClass().getName() + " " + Utils.joinOptions(((Classifier) classifier).getOptions()));
-//	      System.out.println("Dataset: " + data.relationName());
-//	      System.out.println("Folds: " + folds);
-//	      System.out.println();
-//	      System.out.println(eval.toSummaryString("=== " + folds + "-fold Cross-validation run ===", false));
 	      return eval;
 	}
 	
-	public static List<FoldRecord> batchCrossValidation(RegressionProblem cp) throws Exception{
-		RandomPermutation randPerm=new RandomPermutation();
-		randPerm.getRandomPermutation(cp.getData());
-		Instances data=randPerm.permutated;
-		Resample filter=new Resample();
-		filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
-		filter.setInputFormat(data);
-		Instances newTrain = Filter.useFilter(data, filter);
-		filter.setOptions(new String[]{"-Z","30","-no-replacement","-S","3"});
-        Instances newTest = Filter.useFilter(data, filter);
+	public static List<FoldRecord> batchCrossValidation(Instances data, int training_percent) throws Exception{
+		int trainSize = (int) Math.round(data.numInstances() * (double)training_percent/ 100);
+		int testSize = data.numInstances() - (int) Math.round(data.numInstances() * 0.5);
+		Instances newTrain = new Instances(data, 0, trainSize);
+		Instances newTest = new Instances(data, testSize, testSize);
 		Algorithms algo=new Algorithms();
 		List<FoldRecord> probresults= new ArrayList<FoldRecord>();
 		for(ERegressionList name:ERegressionList.values()){
@@ -67,6 +55,7 @@ public class CrossValidations {
 				Evaluation eval=crossValidation(classifier,newTrain,10);
 				FoldRecord record=new FoldRecord(name,setting,eval.correlationCoefficient(),eval.rootMeanSquaredError());
 				foldresult.add(record);
+				System.gc();
 			}
 			Collections.sort(foldresult);
 			FoldRecord bestSetting=foldresult.get(0);
@@ -83,26 +72,25 @@ public class CrossValidations {
 		      System.out.println(eval.toSummaryString("=== test dataset result ===", false));
 		    probresults.add(new FoldRecord(bestSetting.name,bestSetting.settings));
 		}
-		probresults=multipleRun(probresults,randPerm.permutated);
+		System.gc();
+		probresults=multipleRun(probresults,data,training_percent);
 		return probresults;
 	}
 	
-	public static List<FoldRecord> multipleRun(List<FoldRecord> records, Instances permutated ) throws Exception{
+	public static List<FoldRecord> multipleRun(List<FoldRecord> records, Instances permutated,int training_percent ) throws Exception{
 		int m=records.size();
-		int iteration=50;
+		int iteration=10;
 		double[][] corr=new double[iteration][m];
 		double[][] rmse=new double[iteration][m];
 		double[][] mae=new double[iteration][m];
 		for(int i=0;i<iteration;i++){
-			Random rand=new Random();
-			Instances data=permutated;
-			data.randomize(rand);
-			Resample filter=new Resample();
-			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
-			filter.setInputFormat(data);
-			Instances newTrain = Filter.useFilter(data, filter);
-			filter.setOptions(new String[]{"-Z","30","-no-replacement","-S","3"});
-	        Instances newTest = Filter.useFilter(data, filter);
+			RandomPermutation randPerm=new RandomPermutation();
+			randPerm.getRandomPermutation(permutated);
+			Instances data=randPerm.permutated;
+			int trainSize = (int) Math.round(data.numInstances() * (double)training_percent/ 100);
+			int testSize = data.numInstances() - (int) Math.round(data.numInstances() * 0.5);
+			Instances newTrain = new Instances(data, 0, trainSize);
+			Instances newTest = new Instances(data, testSize, testSize);
 	        Algorithms algo=new Algorithms();
 	        for(int j=0;j<m;j++){
 	        	Classifier classifier=algo.createClassifier(records.get(j).name);
@@ -114,6 +102,7 @@ public class CrossValidations {
 				rmse[i][j]=eval.rootMeanSquaredError();
 				mae[i][j]=eval.meanAbsoluteError();
 	        }
+	        System.gc();
 		}
 		List<FoldRecord> probresults=new ArrayList<FoldRecord>();
 		for(int j=0;j<m;j++){
@@ -149,23 +138,33 @@ public class CrossValidations {
 		Problems pbs=new Problems();
 		for(EProblemList name:EProblemList.values()){
 			RegressionProblem cp=pbs.createRegressionProblem(name);
-			cvout.add(batchCrossValidation(cp),name);
+			cp.normalizeData();
+			RandomPermutation randPerm=new RandomPermutation();
+			randPerm.getRandomPermutation(cp.getData());
+			Instances data=randPerm.permutated;
+			cvout.add(batchCrossValidation(data,30),name);
 		}
 		return cvout;
 	}
+	
+	public static SingleProblemOutput TrainingDataSizeEval(EProblemList name) throws Exception{
+		SingleProblemOutput spout=new SingleProblemOutput(name);
+		Problems pbs=new Problems();
+		RegressionProblem cp=pbs.createRegressionProblem(name);
+		cp.normalizeData();
+		RandomPermutation randPerm=new RandomPermutation();
+		randPerm.getRandomPermutation(cp.getData());
+		Instances data=randPerm.permutated;
+		for(int i=10;i<=50;i=i+10){
+			spout.add(batchCrossValidation(data,i));
+		}
+		return spout;
+	}
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
-//			RegressionProblem cp = new RegressionProblem("data/tobs-averages.arff");
-//			Instances data=cp.getData();
-//			Resample filter=new Resample();
-//			filter.setOptions(new String[]{"-Z","30","-no-replacement","-S","1"});
-//			filter.setInputFormat(cp.getData());
-//			Instances newTrain = Filter.useFilter(cp.getData(), filter);
-//			MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
-//			classifier.setOptions(new String[]{"-I","1"});
-//			Evaluation ave=crossValidation(classifier,newTrain,10);
 			CVOutput cvout=autobatchCrossValidation();
 			System.out.println(cvout.getCCTableWVariance());
 			System.out.println(cvout.getRMSETableWVariance());

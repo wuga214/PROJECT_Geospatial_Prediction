@@ -22,9 +22,9 @@ public class Problems {
 //		case USTemperature :
 //			ret = new RegressionProblem("data/Temperature.arff");
 //			break;
-//		case SanFranciscoHousePrice :
-//			ret = new RegressionProblem("data/HousePrice.arff");
-//			break;
+		case SanFranciscoHousePrice :
+			ret = new RegressionProblem("data/HousePrice.arff");
+			break;
 		case SyntheticBox :
 			ret = new RegressionProblem("data/box.arff");
 			break;

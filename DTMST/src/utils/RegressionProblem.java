@@ -43,6 +43,23 @@ public class RegressionProblem {
                         } 
                 }
         }
+        
+        public void normalizeData(){
+        	double smallest=10e10;
+        	for(int i=0;i<data.numInstances();i++){
+        		if(data.instance(i).classValue()<smallest){
+        			smallest = data.instance(i).classValue();
+        		}
+        	}
+        	double magnitude=0.1;
+        	while(smallest>1){
+        		magnitude=magnitude*10;
+        		smallest=smallest/10.0;
+        	}
+			for(int i=0;i<data.numInstances();i++){
+				data.instance(i).setClassValue(data.instance(i).classValue()/magnitude);
+			}
+        }
 
 
         //getters and setters

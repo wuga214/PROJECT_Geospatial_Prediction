@@ -19,7 +19,6 @@ import weka.filters.unsupervised.attribute.AddID;
 public class ModelManager {
 	public List<Segmentation> segmentations;
 	public Instances modeledData;
-	public KNN model;
 	public int[] segmentTracker;
 	public int[] trainDataTracker;
 	public NearestNeighbourSearch NNSearcher;
@@ -112,23 +111,19 @@ public class ModelManager {
 	}
 	
 	
-	public double getLogLikelihood(Instances validating) throws Exception{
+	public double getLogLikelihood(Instances validating, int segIndex) throws Exception{
 		double logLikelihood=0;
 		for(int i=0;i<validating.numInstances();i++){
-<<<<<<< HEAD
-			double mean=segmentations.get(segmentTracker[trainDataTracker[i]]).EX;
-			double var=segmentations.get(segmentTracker[trainDataTracker[i]]).VAR;
-			if(var==0){
-			System.out.println("Error variance is zero!");
-			System.out.println("Segmentation size : "+segmentations.size());
-			System.out.println("Corrent Segmentation id : "+segmentTracker[trainDataTracker[i]]);
+				if(segmentTracker[trainDataTracker[i]]==segIndex){
+				double mean=segmentations.get(segIndex).EX;
+				double var=segmentations.get(segIndex).VAR;
+				if(var==0){
+					System.out.println("Error variance is zero!");
+					System.out.println("Segmentation size : "+segmentations.size());
+					System.out.println("Corrent Segmentation id : "+segmentTracker[trainDataTracker[i]]);
+				}
+				logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-0.5*Math.log(2*Math.PI*var);	
 			}
-=======
-			Instance neighbor=m_NNSearch.nearestNeighbour(validating.instance(i));
-			double mean=segmentations.get((int)neighbor.classValue()).EX;
-			double var=segmentations.get((int)neighbor.classValue()).VAR;
->>>>>>> master
-			logLikelihood+=-(Math.pow(validating.instance(i).classValue()-mean,2)/var)-0.5*Math.log(2*Math.PI*var);			
 		}
 //		System.out.println("Tracker £º"+Arrays.toString(segmentTracker));
 //		for(int q=0;q<segmentations.size();q++){
