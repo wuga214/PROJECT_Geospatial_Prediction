@@ -5,8 +5,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-import sampling.crp.Gibbs;
-import sampling.crp.SampleManager;
+import sampling.fixed.Gibbs;
+import sampling.fixed.SampleManager;
 import utils.RandomPermutation;
 import utils.RegressionProblem;
 import weka.classifiers.Classifier;
@@ -16,7 +16,7 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class GibbsMerging extends Classifier{
+public class LatentRestrictedGibbsMerging extends Classifier{
 	/**
 	 * 
 	 */
@@ -24,20 +24,17 @@ public class GibbsMerging extends Classifier{
 	public SampleManager samp;
 	public int iteration;
 	public int labelRestriction;
-	public double alpha;
 	
-	public GibbsMerging(){
+	public LatentRestrictedGibbsMerging(){
 		samp=new SampleManager();
 		iteration=1000;
 		labelRestriction=0;
-		alpha=0.1;
 	}
 
 	@Override
 	public void buildClassifier(Instances arg0) throws Exception {
 		if(labelRestriction==0){labelRestriction=arg0.numInstances();}
-		Gibbs gb=new Gibbs(arg0, arg0, iteration,labelRestriction, alpha, samp);
-		//GibbsDirLocal gb=new GibbsDirLocal(arg0, arg0, iteration,labelRestriction, samp);
+		Gibbs gb=new Gibbs(arg0, arg0, iteration,labelRestriction, samp);
         gb.Sampling(arg0,false);
         //samp.sampleReport();
         samp.createBaggingModel(arg0);
@@ -60,9 +57,9 @@ public class GibbsMerging extends Classifier{
         	iteration=Integer.parseInt(iter);
         }
         
-        if(Arrays.asList(options).contains("-A")){
-        	String iter=Arrays.asList(options).get(Arrays.asList(options).indexOf("-A")+1);
-        	alpha=Double.parseDouble(iter);
+        if(Arrays.asList(options).contains("-L")){
+        	String iter=Arrays.asList(options).get(Arrays.asList(options).indexOf("-L")+1);
+        	labelRestriction=Integer.parseInt(iter);
         }
         
 //        if(Arrays.asList(options).contains("-L")){
@@ -79,8 +76,8 @@ public class GibbsMerging extends Classifier{
         String[] options = new String[4];
         options[0] = "-I";//number of merging required!!
         options[1] = Integer.toString(iteration);
-        options[2] = "-A";//number of different label restricted
-        options[3] = Double.toString(alpha);;
+        options[2] = "-L";//number of different label restricted
+        options[3] = Double.toString(labelRestriction);
 //        options[3] = Integer.toString(labelRestriction);
         return options;
     }
@@ -95,8 +92,8 @@ public class GibbsMerging extends Classifier{
 			Instances data=new Instances(randPerm.permutated);
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			long startTime = System.currentTimeMillis();
-			GibbsMerging classifier=new GibbsMerging();
-			classifier.setOptions(new String[]{"-I","2000","-A","0.01"});
+			LatentRestrictedGibbsMerging classifier=new LatentRestrictedGibbsMerging();
+			classifier.setOptions(new String[]{"-I","2000","-L","10"});
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","15","-no-replacement","-S","1"});
 			filter.setInputFormat(data);

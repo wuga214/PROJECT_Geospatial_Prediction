@@ -1,0 +1,9 @@
+@relation tsun-averages
+
+@attribute 25.7906 numeric
+@attribute -80.3164 numeric
+@attribute 495 numeric
+
+@data
+42.8939,-85.5447,12
+42.9203,-112.5711,28

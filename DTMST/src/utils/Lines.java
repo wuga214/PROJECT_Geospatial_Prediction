@@ -38,7 +38,7 @@ public class Lines extends JComponent{
 	}
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		g2.scale(15, 15);
+		g2.scale(50, 50);
 		g2.setBackground(Color.white);
 		float dash[] = { 0.1f };
 		g2.setStroke(new BasicStroke(0.005f, BasicStroke.CAP_BUTT,

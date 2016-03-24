@@ -33,14 +33,14 @@ public class Tester {
 		
         RegressionProblem cp;
 		try {
-			cp = new RegressionProblem("data/tobs-averages.arff");
+			cp = new RegressionProblem("data/box.arff");
 	        Resample filter=new Resample();
 	        filter.setOptions(new String[]{"-Z","10","-no-replacement","-S","1"});
 	        filter.setInputFormat(cp.getData());
 	        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
 			points=InstancesToPoints.transfer(newTrain);
-			BowyerWatson bw=new BowyerWatson(26,-124,width,height,points);
-			DTriangle x=new DTriangle(new DPoint(0,0),new DPoint(100,0),new DPoint(10,10));
+			//BowyerWatson bw=new BowyerWatson(26,-124,width,height,points);
+			BowyerWatson bw=new BowyerWatson(-200,-200,300,300,points);
 			//System.out.println(bw.toString());
 		    JFrame window = new JFrame();
 		    window.setBounds(0, 0, 510, 525);
@@ -49,7 +49,8 @@ public class Tester {
 		    System.out.println(full_edges.size());
 		    Kruskal k=new Kruskal(points,full_edges,full_edges.size());
 		    System.out.println(points.size());
-			window.getContentPane().add(new Lines(full_edges,k.getMST(),20,-124));
+			//window.getContentPane().add(new Lines(full_edges,k.getMST(),20,-124));
+		    window.getContentPane().add(new Lines(full_edges,k.getMST(),0,0));
 			 window.setVisible(true);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block

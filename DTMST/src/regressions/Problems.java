@@ -22,20 +22,44 @@ public class Problems {
 //		case USTemperature :
 //			ret = new RegressionProblem("data/Temperature.arff");
 //			break;
-		case SanFranciscoHousePrice :
-			ret = new RegressionProblem("data/HousePrice.arff");
+//		case SanFranciscoHousePrice :
+//			ret = new RegressionProblem("data/HousePrice.arff");
+//			break;
+//		case SyntheticBox :
+//			ret = new RegressionProblem("data/box.arff");
+//			break;
+//		case SyntheticCircles :
+//			ret = new RegressionProblem("data/Circles.arff");
+//			break;
+//		case SyntheticStair :
+//			ret = new RegressionProblem("data/Stair.arff");
+//			break;
+//		case SyntheticCake :
+//			ret = new RegressionProblem("data/Cake.arff");
+//			break;
+		case Queen :
+			ret = new RegressionProblem("data/queens_subset.arff");
 			break;
-		case SyntheticBox :
-			ret = new RegressionProblem("data/box.arff");
+		case Statten :
+			ret = new RegressionProblem("data/statten-island_subset.arff");
 			break;
-		case SyntheticCircles :
-			ret = new RegressionProblem("data/Circles.arff");
+		case Temperature :
+			ret = new RegressionProblem("data/tobs_subset.arff");
 			break;
-		case SyntheticStair :
-			ret = new RegressionProblem("data/Stair.arff");
+		case USGS :
+			ret = new RegressionProblem("data/usgs_subset.arff");
 			break;
-		case SyntheticCake :
-			ret = new RegressionProblem("data/Cake.arff");
+		case Bronx :
+			ret = new RegressionProblem("data/bronx_subset.arff");
+			break;
+		case Brooklyn :
+			ret = new RegressionProblem("data/brooklyn_subset.arff");
+			break;
+		case Dublin :
+			ret = new RegressionProblem("data/dublin-2010_subset.arff");
+			break;
+		case Manhattan :
+			ret = new RegressionProblem("data/manhattan_subset.arff");
 			break;
 		}
 

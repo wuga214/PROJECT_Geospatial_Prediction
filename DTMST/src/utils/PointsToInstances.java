@@ -35,6 +35,27 @@ public class PointsToInstances {
 		
 	}
 	
+	public static Instances transfer(HashSet<DPoint> points){
+		Attribute Attribute1 = new Attribute("Latitude");
+		Attribute Attribute2 = new Attribute("Longitude");
+		Attribute Attribute3 = new Attribute("Value");
+		FastVector fvWekaAttributes = new FastVector(4);
+		 fvWekaAttributes.addElement(Attribute1);
+		 fvWekaAttributes.addElement(Attribute2);
+		 fvWekaAttributes.addElement(Attribute3);
+		Instances instances=new Instances("dataset", fvWekaAttributes, 0);
+		instances.setClassIndex(instances.numAttributes() - 1);
+		for(DPoint p:points){
+			Instance instance=new Instance(3);
+			instance.setValue(Attribute1, p.x);
+			instance.setValue(Attribute2, p.y);
+			instance.setValue(Attribute3, p.value);
+			instances.add(instance);
+		}		
+		return instances;
+		
+	}
+	
 	public static double getAverageValue(HashSet<DPoint> set){
 		double counts=0;
 		for(DPoint p:set){

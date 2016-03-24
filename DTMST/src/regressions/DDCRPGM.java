@@ -3,10 +3,17 @@ package regressions;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
-import sampling.crp.Gibbs;
-import sampling.crp.SampleManager;
+import delaunay.BowyerWatson;
+import sampling.ddcrp.GibbsDirLocal;
+import sampling.ddcrp.SampleManager;
+import structure.DEdge;
+import structure.DPoint;
+import utils.InstancesToPoints;
+import utils.PointsToInstances;
 import utils.RandomPermutation;
 import utils.RegressionProblem;
 import weka.classifiers.Classifier;
@@ -16,36 +23,47 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class GibbsMerging extends Classifier{
+public class DDCRPGM extends Classifier{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3126934031726996304L;
 	public SampleManager samp;
 	public int iteration;
 	public int labelRestriction;
 	public double alpha;
 	
-	public GibbsMerging(){
+	public DDCRPGM(){
 		samp=new SampleManager();
 		iteration=1000;
 		labelRestriction=0;
-		alpha=0.1;
+		alpha=0.01;
 	}
 
 	@Override
 	public void buildClassifier(Instances arg0) throws Exception {
-		if(labelRestriction==0){labelRestriction=arg0.numInstances();}
-		Gibbs gb=new Gibbs(arg0, arg0, iteration,labelRestriction, alpha, samp);
-		//GibbsDirLocal gb=new GibbsDirLocal(arg0, arg0, iteration,labelRestriction, samp);
-        gb.Sampling(arg0,false);
-        //samp.sampleReport();
-        samp.createBaggingModel(arg0);
+		Instances data=arg0;
+		if(labelRestriction==0){labelRestriction=data.numInstances();}
+		GibbsDirLocal gb=new GibbsDirLocal(data, data, iteration, labelRestriction, alpha, samp);
+        gb.Sampling(data,false);
+        samp.createBaggingModel(data);
 	}
 	
     public double classifyInstance(Instance newInstance) throws Exception {
         return samp.predictLabel(newInstance);
     }
+    
+//    public Instances checkDataInTriangulation(Instances data){
+//    	ArrayList<DPoint> points=InstancesToPoints.transfer(data);
+//		BowyerWatson bw=new BowyerWatson(-200,-200,300,300,points);
+//		HashSet<DEdge> full_edges=bw.getPrunEdges();
+//		HashSet<DPoint> dpoints=new HashSet<DPoint>();
+//		for(DEdge x: full_edges){
+//			dpoints.add(x.p[0]);
+//			dpoints.add(x.p[1]);
+//		}
+//		Instances output=PointsToInstances.transfer(dpoints);
+//		return output;
+//    }
     
     public void setOptions(String[] options) throws Exception {
         //work around to avoid the api print trash in the console
@@ -93,16 +111,17 @@ public class GibbsMerging extends Classifier{
 			RandomPermutation randPerm=new RandomPermutation();
 			randPerm.getRandomPermutation(cp.getData());
 			Instances data=new Instances(randPerm.permutated);
+			//Instances data=cp.getData();
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			long startTime = System.currentTimeMillis();
-			GibbsMerging classifier=new GibbsMerging();
-			classifier.setOptions(new String[]{"-I","2000","-A","0.01"});
+			DDCRPGM classifier=new DDCRPGM();
+			classifier.setOptions(new String[]{"-I","1000","-A","0.01"});
 			Resample filter=new Resample();
-			filter.setOptions(new String[]{"-Z","15","-no-replacement","-S","1"});
+			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});
 			filter.setInputFormat(data);
 			Instances newTrain = Filter.useFilter(data, filter);
 			classifier.buildClassifier(newTrain);
-			filter.setOptions(new String[]{"-Z","15","-no-replacement","-S","2"});
+			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","2"});
             Instances newTest = Filter.useFilter(data, filter); 
             Evaluation eval = new Evaluation(newTrain);
             eval.evaluateModel(classifier, newTest);
