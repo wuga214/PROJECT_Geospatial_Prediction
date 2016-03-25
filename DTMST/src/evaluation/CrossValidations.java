@@ -101,6 +101,8 @@ public class CrossValidations {
 				corr[i][j]=eval.correlationCoefficient();
 				rmse[i][j]=eval.rootMeanSquaredError();
 				mae[i][j]=eval.meanAbsoluteError();
+//				rmse[i][j]=eval.rootRelativeSquaredError();
+//				mae[i][j]=eval.relativeAbsoluteError();
 	        }
 	        System.gc();
 		}

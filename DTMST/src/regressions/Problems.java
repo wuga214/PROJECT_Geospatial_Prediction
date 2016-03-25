@@ -28,39 +28,39 @@ public class Problems {
 //		case SyntheticBox :
 //			ret = new RegressionProblem("data/box.arff");
 //			break;
-//		case SyntheticCircles :
-//			ret = new RegressionProblem("data/Circles.arff");
+		case SyntheticCircles :
+			ret = new RegressionProblem("data/Circles.arff");
+			break;
+		case SyntheticStair :
+			ret = new RegressionProblem("data/Stair.arff");
+			break;
+		case SyntheticCake :
+			ret = new RegressionProblem("data/Cake.arff");
+			break;
+//		case Queen :
+//			ret = new RegressionProblem("data/queens_subset.arff");
 //			break;
-//		case SyntheticStair :
-//			ret = new RegressionProblem("data/Stair.arff");
+//		case Statten :
+//			ret = new RegressionProblem("data/statten-island_subset.arff");
 //			break;
-//		case SyntheticCake :
-//			ret = new RegressionProblem("data/Cake.arff");
+//		case Temperature :
+//			ret = new RegressionProblem("data/tobs_subset.arff");
 //			break;
-		case Queen :
-			ret = new RegressionProblem("data/queens_subset.arff");
-			break;
-		case Statten :
-			ret = new RegressionProblem("data/statten-island_subset.arff");
-			break;
-		case Temperature :
-			ret = new RegressionProblem("data/tobs_subset.arff");
-			break;
-		case USGS :
-			ret = new RegressionProblem("data/usgs_subset.arff");
-			break;
-		case Bronx :
-			ret = new RegressionProblem("data/bronx_subset.arff");
-			break;
-		case Brooklyn :
-			ret = new RegressionProblem("data/brooklyn_subset.arff");
-			break;
-		case Dublin :
-			ret = new RegressionProblem("data/dublin-2010_subset.arff");
-			break;
-		case Manhattan :
-			ret = new RegressionProblem("data/manhattan_subset.arff");
-			break;
+//		case USGS :
+//			ret = new RegressionProblem("data/usgs_subset.arff");
+//			break;
+//		case Bronx :
+//			ret = new RegressionProblem("data/bronx_subset.arff");
+//			break;
+//		case Brooklyn :
+//			ret = new RegressionProblem("data/brooklyn_subset.arff");
+//			break;
+//		case Dublin :
+//			ret = new RegressionProblem("data/dublin-2010_subset.arff");
+//			break;
+//		case Manhattan :
+//			ret = new RegressionProblem("data/manhattan_subset.arff");
+//			break;
 		}
 
 		return ret;

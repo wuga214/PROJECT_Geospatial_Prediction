@@ -35,9 +35,18 @@ public class Algorithms {
 			ret = new KNN();
 			break;
 			
-		case GIBBS_VORONOI_MERGING:
+		case GIBBS_CRP_MERGING:
 			ret = new GibbsMerging();
 			break;
+			
+		case GIBBS_DDCRP_MERGING:
+			ret = new DDCRPGM();
+			break;
+			
+		case GIBBS_RESTRICTED_MERGING:
+			ret = new LRGM();
+			break;
+			
 			
 		case MINIMUM_SPANNING_TREE_MERGING :
 			ret = new MAPofBMA(-200,-200,300,300);
@@ -71,10 +80,19 @@ public class Algorithms {
 			param.put("-F",Sets.newHashSet("-F"));
 			break;
 			
-		case GIBBS_VORONOI_MERGING :
+		case GIBBS_CRP_MERGING :
 			param.put("-I",Sets.newHashSet("-I 2000"));
-//			param.put("-L",Sets.newHashSet("-L 1","-L 2","-L 3","-L 4","-L 5","-L 6","-L 7","-L 8","-L 9","-L 10"));
-			param.put("-A",Sets.newHashSet("-A 0.01","-A 0.01"));
+			param.put("-A",Sets.newHashSet("-A 0.001","-A 0.01","-A 0.1"));
+			break;
+			
+		case GIBBS_DDCRP_MERGING :
+			param.put("-I",Sets.newHashSet("-I 2000"));
+			param.put("-A",Sets.newHashSet("-A 0.001","-A 0.01","-A 0.1"));
+			break;
+			
+		case GIBBS_RESTRICTED_MERGING :
+			param.put("-I",Sets.newHashSet("-I 2000"));
+			param.put("-L",Sets.newHashSet("-L 4","-L 6","-L 8","-L 10"));
 			break;
 
 		case MINIMUM_SPANNING_TREE_MERGING :

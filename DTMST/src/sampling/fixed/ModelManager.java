@@ -60,16 +60,17 @@ public class ModelManager {
 			}
 			if(i==segID){
 				segmentations.get(i).addCell(cellID, data);
-				updateModel(segmentations.get(i),i);
+				segmentTracker[cellID]=segID;
+				//updateModel(segmentations.get(i),i);
 			}
 		}
 	}
 	
-	public void updateModel(Segmentation seg,int segIndex){
-		for(int i:seg.cells){
-			segmentTracker[i]=segIndex;
-		}
-	}
+//	public void updateModel(Segmentation seg,int segIndex){
+//		for(int i:seg.cells){
+//			segmentTracker[i]=segIndex;
+//		}
+//	}
 	
 	public void removeEmptySegments(){
 		for(int i=segmentations.size()-1;i>=0;i--){
