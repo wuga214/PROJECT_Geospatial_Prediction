@@ -1,5 +1,9 @@
 # Geospatial_Prediction
 
+IDEA
+===
+1. Simple draw sample from Gibbs to do BMA may be not good choice because some of those samples has lower likelihood. I am considering to change the Gibbs Sampling into Simulated Annealing Algorithm, so that it always looking for the sample has largest likelihood.
+
 TO RUN
 ===
 src/evaluation/CrossValidations.java //This will run Kruskal MST merging to look for the best partitioning, limited by searching space.
@@ -38,7 +42,3 @@ Stair:
 ![stair](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/plots/result_stair.png)
 Cake:
 ![cake](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/plots/result_cake.png)
-
-Gibbs Result Plot with bagging
-===
-![GibbsBox](https://github.com/wuga214/Geospatial_Prediction/blob/RuntimeImproved/BaggingPrediction.png)
