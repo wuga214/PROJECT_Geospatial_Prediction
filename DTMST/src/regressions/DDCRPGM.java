@@ -16,14 +16,14 @@ import utils.InstancesToPoints;
 import utils.PointsToInstances;
 import utils.RandomPermutation;
 import utils.RegressionProblem;
-import weka.classifiers.Classifier;
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class DDCRPGM extends Classifier{
+public class DDCRPGM extends AbstractClassifier{
 	/**
 	 * 
 	 */

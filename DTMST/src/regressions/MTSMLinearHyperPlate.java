@@ -23,7 +23,7 @@ import structure.DPoint;
 import utils.InstancesToPoints;
 import utils.PointsToInstances;
 import utils.RegressionProblem;
-import weka.classifiers.Classifier;
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -32,7 +32,7 @@ import weka.core.neighboursearch.NearestNeighbourSearch;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class MTSMLinearHyperPlate extends Classifier {
+public class MTSMLinearHyperPlate extends AbstractClassifier {
 
 	private static final long serialVersionUID = 573536156928733812L;
 	double height=100;

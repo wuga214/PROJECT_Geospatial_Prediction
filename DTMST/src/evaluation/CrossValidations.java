@@ -18,6 +18,7 @@ import regressions.Problems;
 import utils.RandomPermutation;
 import utils.RegressionProblem;
 import weka.classifiers.Classifier;
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instances;
 import weka.core.Utils;
@@ -29,7 +30,7 @@ public class CrossValidations {
 	public static Evaluation crossValidation(Object classifier, Instances data,int folds) throws Exception{
 		Evaluation eval = new Evaluation(data);
 		for(int n=0;n<folds;n++){
-			Classifier clsCopy = Classifier.makeCopy((Classifier)classifier);
+			AbstractClassifier clsCopy = (AbstractClassifier) AbstractClassifier.makeCopy((AbstractClassifier)classifier);
 			Instances train=data.trainCV(folds, n);
 			Instances valid=data.testCV(folds, n);
 			clsCopy.buildClassifier(train);
@@ -50,7 +51,7 @@ public class CrossValidations {
 			List<String> settings=SettingExtender.generateModels(params);
 			List<FoldRecord> foldresult=new ArrayList<FoldRecord>();
 			for(String setting:settings){
-				Classifier classifier=algo.createClassifier(name);
+				AbstractClassifier classifier=algo.createClassifier(name);
 				classifier.setOptions(setting.split("\\s+"));
 				Evaluation eval=crossValidation(classifier,newTrain,10);
 				FoldRecord record=new FoldRecord(name,setting,eval.correlationCoefficient(),eval.rootMeanSquaredError());
@@ -59,14 +60,14 @@ public class CrossValidations {
 			}
 			Collections.sort(foldresult);
 			FoldRecord bestSetting=foldresult.get(0);
-			Classifier classifier=algo.createClassifier(bestSetting.name);
+			AbstractClassifier classifier=algo.createClassifier(bestSetting.name);
 			classifier.setOptions(bestSetting.settings.split("\\s+"));
 			classifier.buildClassifier(newTrain);
 			Evaluation eval=new Evaluation(newTrain);
 			eval.evaluateModel(classifier, newTest);
 		      System.out.println();
 		      System.out.println("=== Setup run ===");
-		      System.out.println("Classifier: " + classifier.getClass().getName() + " " + Utils.joinOptions(((Classifier) classifier).getOptions()));
+		      System.out.println("Classifier: " + classifier.getClass().getName() + " " + Utils.joinOptions(((AbstractClassifier) classifier).getOptions()));
 		      System.out.println("Dataset: " + data.relationName());
 		      System.out.println();
 		      System.out.println(eval.toSummaryString("=== test dataset result ===", false));
@@ -93,7 +94,7 @@ public class CrossValidations {
 			Instances newTest = new Instances(data, testSize, testSize);
 	        Algorithms algo=new Algorithms();
 	        for(int j=0;j<m;j++){
-	        	Classifier classifier=algo.createClassifier(records.get(j).name);
+	        	AbstractClassifier classifier=algo.createClassifier(records.get(j).name);
 				classifier.setOptions(records.get(j).settings.split("\\s+"));
 				classifier.buildClassifier(newTrain);
 				Evaluation eval = new Evaluation(newTrain);

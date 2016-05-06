@@ -9,7 +9,7 @@ import java.util.Random;
 import regressions.Algorithms;
 import regressions.Problems;
 import utils.RegressionProblem;
-import weka.classifiers.Classifier;
+import weka.classifiers.AbstractClassifier;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
@@ -33,7 +33,7 @@ public class ReConstruct {
 			Instances newTrain = Filter.useFilter(unlabeled, filter);
 			Instances labeled = new Instances(unlabeled);
 			for(int j=0;j<cv.evals.get(i).size();j++){
-				Classifier classifier=algo.createClassifier(cv.evals.get(i).get(j).name);
+				AbstractClassifier classifier=algo.createClassifier(cv.evals.get(i).get(j).name);
 				classifier.setOptions(cv.evals.get(i).get(j).settings.split("\\s+"));				
 				classifier.buildClassifier(newTrain);
 				// label instances

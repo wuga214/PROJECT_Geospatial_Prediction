@@ -14,14 +14,14 @@ import structure.DPoint;
 import utils.InstancesToPoints;
 import utils.PointsToInstances;
 import utils.RegressionProblem;
-import weka.classifiers.Classifier;
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class MAPofBMA extends Classifier{
+public class MAPofBMA extends AbstractClassifier{
 	/**
 	 * 
 	 */
@@ -99,7 +99,7 @@ public class MAPofBMA extends Classifier{
 		// TODO Auto-generated method stub
 		try {
 			for(int i=1;i<=1000;i++){
-			RegressionProblem cp = new RegressionProblem("data/box.arff");
+			RegressionProblem cp = new RegressionProblem("data/circles.arff");
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			MAPofBMA classifier=new MAPofBMA(-200,-200,300,300);
 			classifier.setOptions(new String[]{"-I",Integer.toString(i)});
@@ -114,7 +114,7 @@ public class MAPofBMA extends Classifier{
             eval.evaluateModel(classifier, newTest);
             //System.out.println(eval.toSummaryString("\nResults\n======\n", false));
             //System.out.println(i+","+eval.correlationCoefficient());
-            System.out.println(i+","+eval.correlationCoefficient());
+            System.out.println(i+","+eval.rootMeanSquaredError());
             }
 		
 		} catch (Exception e) {
