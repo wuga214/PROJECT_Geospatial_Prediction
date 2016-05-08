@@ -5,8 +5,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-import sampling.crp.Gibbs;
-import sampling.crp.SampleManager;
+import sampling.proper.ProperGibbs;
+import sampling.proper.SampleManager;
 import utils.RandomPermutation;
 import utils.RegressionProblem;
 import weka.classifiers.AbstractClassifier;
@@ -16,7 +16,7 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class GibbsMerging extends AbstractClassifier {
+public class GibbsProper extends AbstractClassifier {
 	/**
 	 * 
 	 */
@@ -26,7 +26,7 @@ public class GibbsMerging extends AbstractClassifier {
 	public int labelRestriction;
 	public double alpha;
 	
-	public GibbsMerging(){
+	public GibbsProper(){
 		samp=new SampleManager();
 		iteration=1000;
 		labelRestriction=0;
@@ -36,7 +36,7 @@ public class GibbsMerging extends AbstractClassifier {
 	@Override
 	public void buildClassifier(Instances arg0) throws Exception {
 		if(labelRestriction==0){labelRestriction=arg0.numInstances();}
-		Gibbs gb=new Gibbs(arg0, arg0, iteration,labelRestriction, alpha, samp);
+		ProperGibbs gb=new ProperGibbs(arg0, arg0, iteration,labelRestriction, alpha, samp);
 		//GibbsDirLocal gb=new GibbsDirLocal(arg0, arg0, iteration,labelRestriction, samp);
         gb.Sampling(arg0,false);
         //samp.sampleReport();
@@ -95,7 +95,7 @@ public class GibbsMerging extends AbstractClassifier {
 			Instances data=new Instances(randPerm.permutated);
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			long startTime = System.currentTimeMillis();
-			GibbsMerging classifier=new GibbsMerging();
+			GibbsProper classifier=new GibbsProper();
 			classifier.setOptions(new String[]{"-I","2000","-A","0.01"});
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","15","-no-replacement","-S","1"});

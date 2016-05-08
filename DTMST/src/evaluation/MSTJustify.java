@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import regressions.EProblemList;
-import regressions.LRGM;
+import regressions.GibbsFixedSegSize;
 import regressions.MAPofBMA;
 import regressions.Problems;
 import utils.RandomPermutation;

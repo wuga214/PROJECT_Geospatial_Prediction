@@ -16,7 +16,7 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class LRGM extends AbstractClassifier{
+public class GibbsFixedSegSize extends AbstractClassifier{
 	/**
 	 * 
 	 */
@@ -25,7 +25,7 @@ public class LRGM extends AbstractClassifier{
 	public int iteration;
 	public int labelRestriction;
 	
-	public LRGM(){
+	public GibbsFixedSegSize(){
 		samp=new SampleManager();
 		iteration=1000;
 		labelRestriction=0;
@@ -92,7 +92,7 @@ public class LRGM extends AbstractClassifier{
 			Instances data=new Instances(randPerm.permutated);
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			long startTime = System.currentTimeMillis();
-			LRGM classifier=new LRGM();
+			GibbsFixedSegSize classifier=new GibbsFixedSegSize();
 			classifier.setOptions(new String[]{"-I","2000","-L","10"});
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","15","-no-replacement","-S","1"});

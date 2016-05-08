@@ -23,7 +23,7 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class DDCRPGM extends AbstractClassifier{
+public class GibbsDDCRP extends AbstractClassifier{
 	/**
 	 * 
 	 */
@@ -32,7 +32,7 @@ public class DDCRPGM extends AbstractClassifier{
 	public int labelRestriction;
 	public double alpha;
 	
-	public DDCRPGM(){
+	public GibbsDDCRP(){
 		samp=new SampleManager();
 		iteration=1000;
 		labelRestriction=0;
@@ -114,7 +114,7 @@ public class DDCRPGM extends AbstractClassifier{
 			//Instances data=cp.getData();
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			long startTime = System.currentTimeMillis();
-			DDCRPGM classifier=new DDCRPGM();
+			GibbsDDCRP classifier=new GibbsDDCRP();
 			classifier.setOptions(new String[]{"-I","1000","-A","0.01"});
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","1"});

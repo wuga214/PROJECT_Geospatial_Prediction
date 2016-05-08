@@ -35,16 +35,22 @@ public class Algorithms {
 			ret = new KNN();
 			break;
 			
+		case LOCAL_SVR:
+			ret = new LocalSVR();
+			
 		case GIBBS_CRP_MERGING:
-			ret = new GibbsMerging();
+			ret = new GibbsCRP();
 			break;
 			
 		case GIBBS_DDCRP_MERGING:
-			ret = new DDCRPGM();
+			ret = new GibbsDDCRP();
 			break;
 			
+		case GIBBS_PROPER:
+			ret = new GibbsProper();
+			
 		case GIBBS_RESTRICTED_MERGING:
-			ret = new LRGM();
+			ret = new GibbsFixedSegSize();
 			break;
 			
 			
@@ -80,12 +86,22 @@ public class Algorithms {
 			param.put("-F",Sets.newHashSet("-F"));
 			break;
 			
+		case LOCAL_SVR:
+			param.put("-R", Sets.newHashSet("-R 1","-R 2","-R 3","-R 4","-R 5","-R 6","-R 7","-R 8","-R 9","-R 10"));
+			param.put("-F",Sets.newHashSet("-F"));
+			break;
+			
 		case GIBBS_CRP_MERGING :
 			param.put("-I",Sets.newHashSet("-I 2000"));
 			param.put("-A",Sets.newHashSet("-A 0.001","-A 0.01","-A 0.1"));
 			break;
 			
 		case GIBBS_DDCRP_MERGING :
+			param.put("-I",Sets.newHashSet("-I 2000"));
+			param.put("-A",Sets.newHashSet("-A 0.001","-A 0.01","-A 0.1"));
+			break;
+			
+		case GIBBS_PROPER :
 			param.put("-I",Sets.newHashSet("-I 2000"));
 			param.put("-A",Sets.newHashSet("-A 0.001","-A 0.01","-A 0.1"));
 			break;

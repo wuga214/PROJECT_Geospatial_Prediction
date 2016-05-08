@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import regressions.EProblemList;
-import regressions.LRGM;
+import regressions.GibbsFixedSegSize;
 import regressions.Problems;
 import utils.RandomPermutation;
 import utils.RegressionProblem;
@@ -61,7 +61,7 @@ public class GibbsLabelRestriction {
 					int testSize = data.numInstances() - (int) Math.round(data.numInstances() * 0.5);
 					Instances newTrain = new Instances(data, 0, trainSize);
 					Instances newTest = new Instances(data, testSize, testSize);
-					LRGM classifier=new LRGM();
+					GibbsFixedSegSize classifier=new GibbsFixedSegSize();
 					classifier.setOptions(new String[]{"-I",GibbsIterationNumber,"-L",Integer.toString(i)});
 					classifier.buildClassifier(newTrain);
 					Evaluation eval = new Evaluation(newTrain);

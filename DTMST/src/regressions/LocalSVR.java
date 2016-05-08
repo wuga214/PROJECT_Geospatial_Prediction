@@ -24,7 +24,7 @@ public class LocalSVR extends AbstractClassifier {
 	private double stridesize;
 	private Instances data;
 
-	public LocalSVR() throws Exception{
+	public LocalSVR(){
 		radiusrate=1;
 		radius=1;
 		stridesize=1;
