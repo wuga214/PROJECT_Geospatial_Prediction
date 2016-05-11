@@ -65,12 +65,12 @@ public class CrossValidations {
 			classifier.buildClassifier(newTrain);
 			Evaluation eval=new Evaluation(newTrain);
 			eval.evaluateModel(classifier, newTest);
-		      System.out.println();
-		      System.out.println("=== Setup run ===");
-		      System.out.println("Classifier: " + classifier.getClass().getName() + " " + Utils.joinOptions(((AbstractClassifier) classifier).getOptions()));
-		      System.out.println("Dataset: " + data.relationName());
-		      System.out.println();
-		      System.out.println(eval.toSummaryString("=== test dataset result ===", false));
+//		      System.out.println();
+//		      System.out.println("=== Setup run ===");
+//		      System.out.println("Classifier: " + classifier.getClass().getName() + " " + Utils.joinOptions(((AbstractClassifier) classifier).getOptions()));
+//		      System.out.println("Dataset: " + data.relationName());
+//		      System.out.println();
+//		      System.out.println(eval.toSummaryString("=== test dataset result ===", false));
 		    probresults.add(new FoldRecord(bestSetting.name,bestSetting.settings));
 		}
 		System.gc();
@@ -81,6 +81,7 @@ public class CrossValidations {
 	public static List<FoldRecord> multipleRun(List<FoldRecord> records, Instances permutated,int training_percent ) throws Exception{
 		int m=records.size();
 		int iteration=10;
+		long[] timer=new long[m];
 		double[][] corr=new double[iteration][m];
 		double[][] rmse=new double[iteration][m];
 		double[][] mae=new double[iteration][m];
@@ -94,9 +95,12 @@ public class CrossValidations {
 			Instances newTest = new Instances(data, testSize, testSize);
 	        Algorithms algo=new Algorithms();
 	        for(int j=0;j<m;j++){
+	        	long startTime = System.nanoTime();
 	        	AbstractClassifier classifier=algo.createClassifier(records.get(j).name);
 				classifier.setOptions(records.get(j).settings.split("\\s+"));
 				classifier.buildClassifier(newTrain);
+				long endTime = System.nanoTime();
+				timer[j]+=(endTime - startTime)/1000000;
 				Evaluation eval = new Evaluation(newTrain);
 				eval.evaluateModel(classifier, newTest);
 				corr[i][j]=eval.correlationCoefficient();
@@ -107,6 +111,11 @@ public class CrossValidations {
 	        }
 	        System.gc();
 		}
+		for(int j=0;j<m;j++){
+			System.out.print(timer[j]+" ");
+		}
+		System.out.println("\\");
+		System.out.println(timer);
 		List<FoldRecord> probresults=new ArrayList<FoldRecord>();
 		for(int j=0;j<m;j++){
 			double cc=0;

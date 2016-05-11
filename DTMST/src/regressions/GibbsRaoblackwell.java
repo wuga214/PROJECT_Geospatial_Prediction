@@ -16,7 +16,7 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.instance.Resample;
 
-public class GibbsProper extends AbstractClassifier {
+public class GibbsRaoblackwell extends AbstractClassifier {
 	/**
 	 * 
 	 */
@@ -27,12 +27,12 @@ public class GibbsProper extends AbstractClassifier {
 	public double alpha;
 	public boolean raoblackwell;
 	
-	public GibbsProper(){
+	public GibbsRaoblackwell(){
 		samp=new SampleManager();
 		iteration=1000;
 		labelRestriction=0;
 		alpha=0.1;
-		raoblackwell=false;
+		raoblackwell=true;
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class GibbsProper extends AbstractClassifier {
 			Instances data=new Instances(randPerm.permutated);
 			//MAPofBMA classifier=new MAPofBMA(26,-124,24,70);
 			long startTime = System.currentTimeMillis();
-			GibbsProper classifier=new GibbsProper();
+			GibbsRaoblackwell classifier=new GibbsRaoblackwell();
 			classifier.setOptions(new String[]{"-I","2000","-A","0.01"});
 			Resample filter=new Resample();
 			filter.setOptions(new String[]{"-Z","15","-no-replacement","-S","1"});

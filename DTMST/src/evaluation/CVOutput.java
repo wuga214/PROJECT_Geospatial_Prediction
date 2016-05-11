@@ -65,7 +65,7 @@ public class CVOutput {
 		DecimalFormat df = new DecimalFormat("#.00"); 
 		String latextable="\\begin{table}[]\n";
 		latextable+="\\centering\n\\caption{Correlation Coefficient Table}\n";
-		latextable+="\\label{table_1}\n\\begin{tabular}{llll1l}\n";
+		latextable+="\\label{table_1}\n\\begin{tabular}{llllll}\n";
 		latextable+="Classifiers& RegressionTree& GaussianProcess& KNN & MSTMean & MSTHyperplate\n";
 		latextable+="\\hline\n";
 		for(int i=0; i<evals.size();i++){
@@ -85,7 +85,7 @@ public class CVOutput {
 		DecimalFormat df = new DecimalFormat("#.00"); 
 		String latextable="\\begin{table}[]\n";
 		latextable+="\\centering\n\\caption{Correlation Coefficient CI95}\n";
-		latextable+="\\label{table_1}\n\\begin{tabular}{lllll1}\n";
+		latextable+="\\label{table_1}\n\\begin{tabular}{llllll}\n";
 		latextable+="Classifiers& RegressionTree& GaussianProcess& KNN & MSTMean & MSTHyperplate\n";
 		latextable+="\\hline\n";
 		for(int i=0; i<evals.size();i++){
@@ -105,7 +105,7 @@ public class CVOutput {
 		DecimalFormat df = new DecimalFormat("#.00"); 
 		String latextable="\\begin{table}[]\n";
 		latextable+="\\centering\n\\caption{RMSE CI95}\n";
-		latextable+="\\label{table_2}\n\\begin{tabular}{lllll1}\n";
+		latextable+="\\label{table_2}\n\\begin{tabular}{llllll}\n";
 		latextable+="Classifiers& RegressionTree& GaussianProcess& KNN & MSTMean & MSTHyperplate\n";
 		latextable+="\\hline\n";
 		for(int i=0; i<evals.size();i++){
@@ -125,7 +125,7 @@ public class CVOutput {
 		DecimalFormat df = new DecimalFormat("#.00"); 
 		String latextable="\\begin{table}[]\n";
 		latextable+="\\centering\n\\caption{MAE CI95}\n";
-		latextable+="\\label{table_3}\n\\begin{tabular}{llll1l}\n";
+		latextable+="\\label{table_3}\n\\begin{tabular}{llllll}\n";
 		latextable+="Classifiers& RegressionTree& GaussianProcess& KNN & MSTMean & MSTHyperplate\n";
 		latextable+="\\hline\n";
 		for(int i=0; i<evals.size();i++){

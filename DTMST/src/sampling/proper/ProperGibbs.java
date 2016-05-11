@@ -26,8 +26,8 @@ public class ProperGibbs {
 	public double alpha;//dirichlet parameter
 	
 	
-	public ProperGibbs(Instances data, Instances valid, int iter, int lablenum, double dirichlet, SampleManager samp) throws Exception{
-		Manager=new ModelManager(data,lablenum);
+	public ProperGibbs(Instances data, Instances valid, int iter, int lablenum, double dirichlet, SampleManager samp,boolean raoblackwell) throws Exception{
+		Manager=new ModelManager(data,lablenum,raoblackwell);
 		oregData=data;
 		validating=valid;
 		iteration=iter;
@@ -154,7 +154,7 @@ public class ProperGibbs {
 	        Instances newTrain = Filter.useFilter(cp.getData(), filter); 
 	        filter.setOptions(new String[]{"-Z","20","-no-replacement","-S","2"});
 	        Instances newTest = Filter.useFilter(cp.getData(), filter); 
-	        ProperGibbs gb=new ProperGibbs(newTrain, newTrain, 1000, newTrain.numInstances(),0.01, samp);
+	        ProperGibbs gb=new ProperGibbs(newTrain, newTrain, 1000, newTrain.numInstances(),0.01, samp,true);
 	        gb.Sampling(cp.getData(),true);
 	        gb.Manager.writeFile("Gibbs");
 	        samp.showSampleSize();

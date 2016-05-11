@@ -27,9 +27,15 @@ public class ModelManager {
 	public static double log_pi2=0.79817986835;
 	public double HiddenSampleSize=50;
 	
-	public ModelManager(Instances data, int hyper) throws Exception{
+	public ModelManager(Instances data, int hyper, boolean raoblackwell) throws Exception{
 		this(data);
 		Hyperparameter=hyper;
+		if(raoblackwell==true){
+			HiddenSampleSize=50;
+		}
+		else{
+			HiddenSampleSize=1;
+		}
 	}
 
 	public ModelManager(Instances data) throws Exception{

@@ -105,6 +105,15 @@ public class LocalSVR extends AbstractClassifier {
         }
         System.setOut(console);
     }
+    
+    public String[] getOptions() {
+
+        String[] options = new String[3];
+        options[0] = "-R";//number of merging required!!
+        options[1] = Integer.toString(radiusrate);
+        options[2] = "-F";//number of different label restricted
+        return options;
+    }
 	
 	
 	public static void main(String[] args) {
